@@ -7,6 +7,9 @@
     <description></description>
     <license>MIT</license>
     <keywords></keywords>
+
+    <dependency id="cordova-plugin-genie-sdk" url="https://github.com/project-sunbird/cordova-plugin-genie-sdk.git"/>
+
     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
 
     <js-module src="www/plugin.js" name="plugin">
@@ -21,6 +24,71 @@
           <param name="android-package" value="org.sunbird.SplashScreen" />
           <param name="onload" value="true" />
         </feature>
+      </config-file>
+
+      <config-file target="AndroidManifest.xml" parent="application/activity[@android:name='MainActivity']" mode="merge">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:mimeType="application/octet-stream"
+                    android:pathPattern=".*\\.ecar" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="application/ecar"
+                    android:scheme="content" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:pathPattern=".*\\.ecar" />
+                <data android:pathPattern="/*.*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:host="*" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.ecar" />
+                <data android:pathPattern="/*.*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
+                <data android:host="*" />
+            </intent-filter>
+
       </config-file>
 
       <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />

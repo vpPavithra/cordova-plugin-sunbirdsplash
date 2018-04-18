@@ -2,6 +2,7 @@ package org.sunbird;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -20,8 +21,17 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.ekstep.genieservices.GenieService;
+import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.ContentImportResponse;
+import org.ekstep.genieservices.commons.bean.EcarImportRequest;
+import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
+import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.List;
 
 public class SplashScreen extends CordovaPlugin {
 
@@ -34,8 +44,10 @@ public class SplashScreen extends CordovaPlugin {
     private static final int DEFAULT_FADE_DURATION = 500;
     private static Dialog splashDialog;
     private ImageView splashImageView;
+    private TextView importStatusTextView;
     private int orientation;
     private SharedPreferences sharedPreferences;
+    private volatile boolean importingInProgress;
 
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
     private View getView() {
@@ -68,6 +80,7 @@ public class SplashScreen extends CordovaPlugin {
         // Save initial orientation.
         orientation = cordova.getActivity().getResources().getConfiguration().orientation;
         displaySplashScreen();
+        handleIntentForDeeplinking(cordova.getActivity().getIntent());
     }
 
     private int getFadeDuration () {
@@ -87,11 +100,13 @@ public class SplashScreen extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("hide")) {
-            cordova.getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    webView.postMessage("splashscreen", "hide");
-                }
-            });
+            if (!importingInProgress) {
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        webView.postMessage("splashscreen", "hide");
+                    }
+                });
+            }
         } else if (action.equals("show")) {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -119,13 +134,17 @@ public class SplashScreen extends CordovaPlugin {
     public Object onMessage(String id, Object data) {
         if ("splashscreen".equals(id)) {
             if ("hide".equals(data.toString())) {
-                this.hideSplashScreen(false);
-                getView().setVisibility(View.VISIBLE);
+                hide();
             } else if ("show".equals(data.toString())) {
                 this.displaySplashScreen();
             }
         }
         return null;
+    }
+
+    private void hide() {
+        this.hideSplashScreen(false);
+        getView().setVisibility(View.VISIBLE);
     }
 
     // Don't add @Override so that plugin still compiles on 3.x.x for a while
@@ -190,10 +209,12 @@ public class SplashScreen extends CordovaPlugin {
                 LinearLayout splashContent = createParentContentView(context);
 
                 createLogoImageView(context, splashDim, drawableId, logoUrl);
+                createImportStatusView(context);
                 TextView appNameTextView = createAppNameView(context, appName);
 
                 splashContent.addView(splashImageView);
                 splashContent.addView(appNameTextView);
+                splashContent.addView(importStatusTextView);
 
                 // Create and show the dialog
                 splashDialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
@@ -222,6 +243,17 @@ public class SplashScreen extends CordovaPlugin {
         appNameTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         appNameTextView.setLayoutParams(textViewParam);
         return appNameTextView;
+    }
+
+    @NonNull
+    private void createImportStatusView(Context context) {
+        importStatusTextView = new TextView(context);
+        LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        textViewParam.setMargins(10, 10, 10, 10);
+        importStatusTextView.setTextSize(10);
+        importStatusTextView.setTextColor(Color.GRAY);
+        importStatusTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        importStatusTextView.setLayoutParams(textViewParam);
     }
 
     private void createLogoImageView(Context context, int splashDim, int drawableId, String logoUrl) {
@@ -255,6 +287,73 @@ public class SplashScreen extends CordovaPlugin {
         LayoutParams parentParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         splashContent.setLayoutParams(parentParams);
         return splashContent;
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntentForDeeplinking(intent);
+    }
+
+    private void handleIntentForDeeplinking(Intent intent) {
+        if (intent != null && intent.getData() != null && intent.getData().getPath() != null) {
+            String path = intent.getData().getPath();
+            int index = path.lastIndexOf('.');
+            if (index > -1) {
+                String extension = path.substring(++index);
+                if (extension.equals("ecar")) {
+                    String toPath = "/storage/emulated/0/Android/data/org.sunbird.app/files";
+                    EcarImportRequest.Builder builder = new EcarImportRequest.Builder();
+                    builder.fromFilePath(path);
+                    builder.toFolder(toPath);
+                    builder.isChildContent();
+                    importingInProgress = true;
+                    importStatusTextView.setText("Importing lesson...");
+                    GenieService.getAsyncService().getContentService().importEcar(builder.build(),
+                            new IResponseHandler<List<ContentImportResponse>>() {
+                        @Override
+                        public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
+
+                            String status = "Import failed. Lesson not supported.";
+
+
+                            List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
+                            if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
+                                ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
+                                switch (importStatus) {
+                                    case NOT_COMPATIBLE:
+                                        status = "Import failed. Lesson not supported.";
+                                        break;
+                                    case CONTENT_EXPIRED:
+                                        status = "Import failed. Lesson expired";
+                                        break;
+                                    case ALREADY_EXIST:
+                                        status = "The file is already imported. Please select a new file";
+                                        break;
+                                    default:
+                                        status = "Successfully imported lesson!!";
+                                        break;
+
+                                }
+                            } else {
+                                status = "Successfully imported lesson!!";
+                            }
+
+                            importStatusTextView.setText(status);
+                            importingInProgress = false;
+                            hide();
+                        }
+
+                        @Override
+                        public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
+                            importStatusTextView.setText("Import lesson failed!!");
+                            importingInProgress = false;
+                            hide();
+                        }
+                    });
+                }
+            }
+        }
     }
 
 }
