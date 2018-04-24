@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -21,16 +22,23 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.Content;
+import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
+import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.sunbird.deeplinks.DeepLinkNavigation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SplashScreen extends CordovaPlugin {
@@ -48,6 +56,10 @@ public class SplashScreen extends CordovaPlugin {
     private int orientation;
     private SharedPreferences sharedPreferences;
     private volatile boolean importingInProgress;
+    private DeepLinkNavigation mDeepLinkNavigation;
+
+    private ArrayList<CallbackContext> mHandler = new ArrayList<>();
+    private JSONObject mLastEvent;
 
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
     private View getView() {
@@ -80,6 +92,9 @@ public class SplashScreen extends CordovaPlugin {
         // Save initial orientation.
         orientation = cordova.getActivity().getResources().getConfiguration().orientation;
         displaySplashScreen();
+
+        mDeepLinkNavigation = new DeepLinkNavigation(cordova.getActivity());
+
         handleIntentForDeeplinking(cordova.getActivity().getIntent());
     }
 
@@ -117,11 +132,14 @@ public class SplashScreen extends CordovaPlugin {
             String appName = args.getString(0);
             String logoUrl = args.getString(1);
             cacheImageAndAppName(appName, logoUrl);
+        } else if (action.equals("onDeepLink")) {
+            mHandler.add(callbackContext);
+            consumeEvents();
         } else {
             return false;
         }
 
-        callbackContext.success();
+//        callbackContext.success();
         return true;
     }
 
@@ -295,7 +313,94 @@ public class SplashScreen extends CordovaPlugin {
         handleIntentForDeeplinking(intent);
     }
 
+
+    private void consumeEvents() {
+        if(this.mHandler.size() == 0 || mLastEvent == null) {
+            return;
+        }
+
+        for(CallbackContext callback : this.mHandler) {
+            final PluginResult result = new PluginResult(PluginResult.Status.OK, mLastEvent);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+        }
+
+        mLastEvent = null;
+    }
+
     private void handleIntentForDeeplinking(Intent intent) {
+        mDeepLinkNavigation.validateAndHandleDeepLink(intent, new DeepLinkNavigation.IValidateDeepLink() {
+            @Override
+            public void validLocalDeepLink() {
+                Log.i("SplashScreen", "validLocalDeepLink");
+            }
+
+            @Override
+            public void validServerDeepLink() {
+                Log.i("SplashScreen", "validServerDeepLink");
+
+                if (intent.getData() == null) {
+                    return;
+                }
+
+                String url = intent.getData().toString();
+
+                String newString = url.replace("https://", "").replace("http://", "");
+                String[] pair = newString.split("/");
+
+                if (pair[1].equalsIgnoreCase("public")) {
+                    String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
+
+                    ContentDetailsRequest request = new ContentDetailsRequest.Builder()
+                            .forContent(identifier)
+                            .build();
+
+                    GenieService.getAsyncService().getContentService()
+                            .getContentDetails(request, new IResponseHandler<Content>() {
+                        @Override
+                        public void onSuccess(GenieResponse<Content> genieResponse) {
+                            String response = GsonUtil.toJson(genieResponse);
+                            try {
+                                mLastEvent = new JSONObject(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            consumeEvents();
+                        }
+
+                        @Override
+                        public void onError(GenieResponse<Content> genieResponse) {
+                            consumeEvents();
+                        }
+                    });
+                } else if (pair[1].equalsIgnoreCase("dial")) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("type", "dialcode");
+                        jsonObject.put("code", url);
+
+                        mLastEvent = jsonObject;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    consumeEvents();
+                }
+
+            }
+
+            @Override
+            public void notAValidDeepLink() {
+                Log.i("SplashScreen", "notAValidDeepLink");
+            }
+
+            @Override
+            public void onTagDeepLinkFound(String tagName, String description, String startDate, String endDate) {
+                Log.i("SplashScreen", "onTagDeepLinkFound");
+                consumeEvents();
+            }
+        });
+
         if (intent != null && intent.getData() != null && intent.getData().getPath() != null) {
             String path = intent.getData().getPath();
             int index = path.lastIndexOf('.');
