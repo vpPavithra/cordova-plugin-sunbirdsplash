@@ -33,6 +33,7 @@ import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
+import org.ekstep.genieservices.commons.bean.telemetry.Impression;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,12 +194,27 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
+    private void generateImpressionEvent(){
+        Impression impression=new Impression.Builder().type("view").pageId("splash").environment("home").build();
+        GenieService.getAsyncService().getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+
+            }
+
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+
+            }
+        });
+    }
 
     /**
      * Shows the splash screen over the full Activity
      */
     @SuppressWarnings("deprecation")
     private void displaySplashScreen() {
+        generateImpressionEvent();
         final int splashscreenTime = DEFAULT_SPLASHSCREEN_DURATION;
         final int drawableId = getSplashId();
 
