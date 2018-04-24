@@ -12,6 +12,9 @@ var splash = {
   setContent: function (appName, url) {
     exec(null, null, PLUGIN_NAME, "setContent", [appName, url]);
   },
+  onDeepLink: function(successCallback) {
+    exec(successCallback, null, PLUGIN_NAME, "onDeepLink", []);
+  }
 };
 
 
