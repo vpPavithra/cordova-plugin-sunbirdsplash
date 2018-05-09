@@ -14,6 +14,9 @@ var splash = {
   },
   onDeepLink: function(successCallback) {
     exec(successCallback, null, PLUGIN_NAME, "onDeepLink", []);
+  },
+  clearPrefs: function(successCallback) {
+    exec(successCallback, null, PLUGIN_NAME, "clearPrefs", []);
   }
 };
 
