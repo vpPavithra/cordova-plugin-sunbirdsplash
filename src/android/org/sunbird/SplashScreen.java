@@ -136,6 +136,11 @@ public class SplashScreen extends CordovaPlugin {
         } else if (action.equals("onDeepLink")) {
             mHandler.add(callbackContext);
             consumeEvents();
+        } else if (action.equals("clearPrefs")) {
+            if (sharedPreferences != null) {
+                sharedPreferences.edit().clear().apply();
+                callbackContext.success();
+            }
         } else {
             return false;
         }
