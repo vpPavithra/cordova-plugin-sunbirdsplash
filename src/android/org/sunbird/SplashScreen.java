@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.ekstep.genieservices.GenieService;
@@ -31,9 +32,9 @@ import org.ekstep.genieservices.commons.bean.ContentImportResponse;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
+import org.ekstep.genieservices.commons.bean.telemetry.Impression;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
-import org.ekstep.genieservices.commons.bean.telemetry.Impression;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -214,6 +215,11 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
+    private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
+        return cordova.getActivity().getResources().getIdentifier(name, resourceType,
+                cordova.getActivity().getApplicationInfo().packageName);
+    }
+
     /**
      * Shows the splash screen over the full Activity
      */
@@ -223,7 +229,8 @@ public class SplashScreen extends CordovaPlugin {
         final int splashscreenTime = DEFAULT_SPLASHSCREEN_DURATION;
         final int drawableId = getSplashId();
 
-        final String appName = sharedPreferences.getString(KEY_NAME, "SUNBIRD");
+        final String appName = sharedPreferences.getString(KEY_NAME,
+                cordova.getActivity().getString(getIdOfResource(cordova, "_app_name", "string")));
         final String logoUrl = sharedPreferences.getString(KEY_LOGO, "");
 
         final int fadeSplashScreenDuration = getFadeDuration();
