@@ -39,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sunbird.deeplinks.DeepLinkNavigation;
+import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -420,6 +421,50 @@ public class SplashScreen extends CordovaPlugin {
             @Override
             public void notAValidDeepLink() {
                 Log.i("SplashScreen", "notAValidDeepLink");
+
+                boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
+                    @Override
+                    public void onImportSuccess() {
+                        importStatusTextView.setText("Successfully imported lesson!!");
+                        importingInProgress = false;
+
+                        hide();
+                    }
+
+                    @Override
+                    public void onImportFailure(ContentImportStatus status) {
+                        String statusText = null;
+                        switch (status) {
+                            case NOT_COMPATIBLE:
+                                statusText = "Import failed. Lesson not supported.";
+                                break;
+                            case CONTENT_EXPIRED:
+                                statusText = "Import failed. Lesson expired";
+                                break;
+                            case ALREADY_EXIST:
+                                statusText = "The file is already imported. Please select a new file";
+                                break;
+                            default:
+                                statusText = "Successfully imported lesson!!";
+                                break;
+                        }
+
+                        importStatusTextView.setText(statusText);
+                        importingInProgress = false;
+
+                        hide();
+                    }
+
+                    @Override
+                    public void onOutDatedEcarFound() {
+                        hide();
+                    }
+                }, intent, true);
+
+                if (isImport) {
+                    importingInProgress = true;
+                    importStatusTextView.setText("Importing lesson...");
+                }
             }
 
             @Override
@@ -429,64 +474,7 @@ public class SplashScreen extends CordovaPlugin {
             }
         });
 
-        if (intent != null && intent.getData() != null && intent.getData().getPath() != null) {
-            String path = intent.getData().getPath();
-            int index = path.lastIndexOf('.');
-            if (index > -1) {
-                String extension = path.substring(++index);
-                if (extension.equals("ecar")) {
-                    String toPath = "/storage/emulated/0/Android/data/org.sunbird.app/files";
-                    EcarImportRequest.Builder builder = new EcarImportRequest.Builder();
-                    builder.fromFilePath(path);
-                    builder.toFolder(toPath);
-                    builder.isChildContent();
-                    importingInProgress = true;
-                    importStatusTextView.setText("Importing lesson...");
-                    GenieService.getAsyncService().getContentService().importEcar(builder.build(),
-                            new IResponseHandler<List<ContentImportResponse>>() {
-                        @Override
-                        public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
 
-                            String status = "Import failed. Lesson not supported.";
-
-
-                            List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
-                            if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
-                                ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
-                                switch (importStatus) {
-                                    case NOT_COMPATIBLE:
-                                        status = "Import failed. Lesson not supported.";
-                                        break;
-                                    case CONTENT_EXPIRED:
-                                        status = "Import failed. Lesson expired";
-                                        break;
-                                    case ALREADY_EXIST:
-                                        status = "The file is already imported. Please select a new file";
-                                        break;
-                                    default:
-                                        status = "Successfully imported lesson!!";
-                                        break;
-
-                                }
-                            } else {
-                                status = "Successfully imported lesson!!";
-                            }
-
-                            importStatusTextView.setText(status);
-                            importingInProgress = false;
-                            hide();
-                        }
-
-                        @Override
-                        public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
-                            importStatusTextView.setText("Import lesson failed!!");
-                            importingInProgress = false;
-                            hide();
-                        }
-                    });
-                }
-            }
-        }
     }
 
 }
