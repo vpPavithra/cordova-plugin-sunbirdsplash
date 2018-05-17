@@ -108,6 +108,7 @@
       <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
+      <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
 
     </platform>
 
