@@ -18,7 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -28,12 +29,9 @@ import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.Content;
 import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
-import org.ekstep.genieservices.commons.bean.ContentImportResponse;
-import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.bean.telemetry.Impression;
-import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +40,6 @@ import org.sunbird.deeplinks.DeepLinkNavigation;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SplashScreen extends CordovaPlugin {
 
@@ -64,12 +61,17 @@ public class SplashScreen extends CordovaPlugin {
     private ArrayList<CallbackContext> mHandler = new ArrayList<>();
     private JSONObject mLastEvent;
 
+    private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
+        return cordova.getActivity().getResources().getIdentifier(name, resourceType,
+                cordova.getActivity().getApplicationInfo().packageName);
+    }
+
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
     private View getView() {
         try {
-            return (View)webView.getClass().getMethod("getView").invoke(webView);
+            return (View) webView.getClass().getMethod("getView").invoke(webView);
         } catch (Exception e) {
-            return (View)webView;
+            return (View) webView;
         }
     }
 
@@ -101,7 +103,7 @@ public class SplashScreen extends CordovaPlugin {
         handleIntentForDeeplinking(cordova.getActivity().getIntent());
     }
 
-    private int getFadeDuration () {
+    private int getFadeDuration() {
         return DEFAULT_FADE_DURATION;
     }
 
@@ -152,8 +154,10 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void cacheImageAndAppName(String appName, String logoUrl) {
+        int dim = getSplashDim(cordova.getActivity().getWindowManager().getDefaultDisplay());
         sharedPreferences.edit().putString(KEY_NAME, appName).putString(KEY_LOGO, logoUrl).apply();
-        Picasso.with(cordova.getActivity()).load(logoUrl);
+        Glide.with(cordova.getActivity())
+                .load(logoUrl).downloadOnly(dim, dim);
     }
 
     @Override
@@ -201,8 +205,8 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
-    private void generateImpressionEvent(){
-        Impression impression=new Impression.Builder().type("view").pageId("splash").environment("home").build();
+    private void generateImpressionEvent() {
+        Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
         GenieService.getAsyncService().getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
@@ -214,11 +218,6 @@ public class SplashScreen extends CordovaPlugin {
 
             }
         });
-    }
-
-    private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
-        return cordova.getActivity().getResources().getIdentifier(name, resourceType,
-                cordova.getActivity().getApplicationInfo().packageName);
     }
 
     /**
@@ -251,7 +250,7 @@ public class SplashScreen extends CordovaPlugin {
                 // Get reference to display
                 Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
                 Context context = webView.getContext();
-                int splashDim = display.getWidth() < display.getHeight() ? display.getWidth() : display.getHeight();
+                int splashDim = getSplashDim(display);
 
                 LinearLayout splashContent = createParentContentView(context);
 
@@ -277,6 +276,10 @@ public class SplashScreen extends CordovaPlugin {
 
             }
         });
+    }
+
+    private int getSplashDim(Display display) {
+        return display.getWidth() < display.getHeight() ? display.getWidth() : display.getHeight();
     }
 
     @NonNull
@@ -307,7 +310,7 @@ public class SplashScreen extends CordovaPlugin {
         splashImageView = new ImageView(context);
 //        splashImageView.setImageResource(drawableId);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(splashDim, splashDim);
-        layoutParams.setMargins(10, splashDim/4, 10, 0);
+        layoutParams.setMargins(10, splashDim / 4, 10, 0);
         splashImageView.setLayoutParams(layoutParams);
 
 
@@ -321,7 +324,10 @@ public class SplashScreen extends CordovaPlugin {
         if (TextUtils.isEmpty(logoUrl)) {
             splashImageView.setImageResource(drawableId);
         } else {
-            Picasso.with(cordova.getActivity()).load(logoUrl).placeholder(drawableId).into(splashImageView);
+            Glide.with(context)
+                    .load(logoUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(splashImageView);
         }
 
     }
@@ -344,11 +350,11 @@ public class SplashScreen extends CordovaPlugin {
 
 
     private void consumeEvents() {
-        if(this.mHandler.size() == 0 || mLastEvent == null) {
+        if (this.mHandler.size() == 0 || mLastEvent == null) {
             return;
         }
 
-        for(CallbackContext callback : this.mHandler) {
+        for (CallbackContext callback : this.mHandler) {
             final PluginResult result = new PluginResult(PluginResult.Status.OK, mLastEvent);
             result.setKeepCallback(true);
             callback.sendPluginResult(result);
@@ -386,22 +392,22 @@ public class SplashScreen extends CordovaPlugin {
 
                     GenieService.getAsyncService().getContentService()
                             .getContentDetails(request, new IResponseHandler<Content>() {
-                        @Override
-                        public void onSuccess(GenieResponse<Content> genieResponse) {
-                            String response = GsonUtil.toJson(genieResponse);
-                            try {
-                                mLastEvent = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            consumeEvents();
-                        }
+                                @Override
+                                public void onSuccess(GenieResponse<Content> genieResponse) {
+                                    String response = GsonUtil.toJson(genieResponse);
+                                    try {
+                                        mLastEvent = new JSONObject(response);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    consumeEvents();
+                                }
 
-                        @Override
-                        public void onError(GenieResponse<Content> genieResponse) {
-                            consumeEvents();
-                        }
-                    });
+                                @Override
+                                public void onError(GenieResponse<Content> genieResponse) {
+                                    consumeEvents();
+                                }
+                            });
                 } else if (pair[1].equalsIgnoreCase("dial")) {
                     JSONObject jsonObject = new JSONObject();
                     try {
