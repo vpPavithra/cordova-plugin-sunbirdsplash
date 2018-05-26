@@ -173,6 +173,12 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void hide() {
+
+        // To avoid black screen while content importing
+        if (importingInProgress) {
+            return;
+        }
+
         this.hideSplashScreen(false);
         getView().setVisibility(View.VISIBLE);
     }
@@ -193,6 +199,11 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void hideSplashScreen(final boolean forceHideImmediately) {
+        // To avoid black screen while content importing
+        if (importingInProgress) {
+            return;
+        }
+
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 if (splashDialog != null) {
@@ -464,11 +475,13 @@ public class SplashScreen extends CordovaPlugin {
 
                     @Override
                     public void onOutDatedEcarFound() {
+                        importingInProgress = false;
                         hide();
                     }
                 }, intent, true);
 
                 if (isImport) {
+                    displaySplashScreen();
                     importingInProgress = true;
                     importStatusTextView.setText("Importing lesson...");
                 }
