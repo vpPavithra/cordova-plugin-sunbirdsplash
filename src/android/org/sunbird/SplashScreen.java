@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -443,9 +444,9 @@ public class SplashScreen extends CordovaPlugin {
                 boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
                     @Override
                     public void onImportSuccess() {
-                        importStatusTextView.setText("Successfully imported lesson!!");
+                        importStatusTextView.setText("Successfully imported!!");
                         importingInProgress = false;
-
+                        Toast.makeText(cordova.getActivity(),"Successfully imported!!",Toast.LENGTH_SHORT).show();
                         hide();
                     }
 
@@ -463,13 +464,13 @@ public class SplashScreen extends CordovaPlugin {
                                 statusText = "The file is already imported. Please select a new file";
                                 break;
                             default:
-                                statusText = "Successfully imported lesson!!";
+                                statusText = "Import failed!!";
                                 break;
                         }
 
                         importStatusTextView.setText(statusText);
                         importingInProgress = false;
-
+                        Toast.makeText(cordova.getActivity(),statusText,Toast.LENGTH_SHORT).show();
                         hide();
                     }
 
@@ -483,7 +484,7 @@ public class SplashScreen extends CordovaPlugin {
                 if (isImport) {
                     displaySplashScreen();
                     importingInProgress = true;
-                    importStatusTextView.setText("Importing lesson...");
+                    importStatusTextView.setText("Importing...");
                 }
             }
 
