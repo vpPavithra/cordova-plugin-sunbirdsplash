@@ -219,18 +219,25 @@ public class SplashScreen extends CordovaPlugin {
 
     private void generateImpressionEvent() {
         Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
-        GenieService.getAsyncService().getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
-            @Override
-            public void onSuccess(GenieResponse<Void> genieResponse) {
+        GenieAsyncService genieAsyncService = GenieService.getAsyncService();
 
-            }
+        if (genieAsyncService != null && genieAsyncService.getTelemetryService() != null) {
 
-            @Override
-            public void onError(GenieResponse<Void> genieResponse) {
+            genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+                @Override
+                public void onSuccess(GenieResponse<Void> genieResponse) {
 
-            }
-        });
+                }
+
+                @Override
+                public void onError(GenieResponse<Void> genieResponse) {
+
+                }
+            });
+        }
+
     }
+
 
     /**
      * Shows the splash screen over the full Activity
