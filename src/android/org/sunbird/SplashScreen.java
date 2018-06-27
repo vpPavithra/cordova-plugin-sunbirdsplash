@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,6 +27,7 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.ekstep.genieservices.GenieService;
+import org.ekstep.genieservices.async.GenieAsyncService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.Content;
 import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
@@ -218,18 +220,25 @@ public class SplashScreen extends CordovaPlugin {
 
     private void generateImpressionEvent() {
         Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
-        GenieService.getAsyncService().getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
-            @Override
-            public void onSuccess(GenieResponse<Void> genieResponse) {
+        GenieAsyncService genieAsyncService = GenieService.getAsyncService();
 
-            }
+        if (genieAsyncService != null && genieAsyncService.getTelemetryService() != null) {
 
-            @Override
-            public void onError(GenieResponse<Void> genieResponse) {
+            genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+                @Override
+                public void onSuccess(GenieResponse<Void> genieResponse) {
 
-            }
-        });
+                }
+
+                @Override
+                public void onError(GenieResponse<Void> genieResponse) {
+
+                }
+            });
+        }
+
     }
+
 
     /**
      * Shows the splash screen over the full Activity
@@ -432,6 +441,33 @@ public class SplashScreen extends CordovaPlugin {
                     }
 
                     consumeEvents();
+                } else if (pair[1].equalsIgnoreCase("play")
+                        && (pair[2].equalsIgnoreCase("collection")
+                        || pair[2].equalsIgnoreCase("content"))) {
+                    String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
+
+                    ContentDetailsRequest request = new ContentDetailsRequest.Builder()
+                            .forContent(identifier)
+                            .build();
+
+                    GenieService.getAsyncService().getContentService()
+                            .getContentDetails(request, new IResponseHandler<Content>() {
+                                @Override
+                                public void onSuccess(GenieResponse<Content> genieResponse) {
+                                    String response = GsonUtil.toJson(genieResponse);
+                                    try {
+                                        mLastEvent = new JSONObject(response);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    consumeEvents();
+                                }
+
+                                @Override
+                                public void onError(GenieResponse<Content> genieResponse) {
+                                    consumeEvents();
+                                }
+                            });
                 }
 
             }
@@ -443,9 +479,9 @@ public class SplashScreen extends CordovaPlugin {
                 boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
                     @Override
                     public void onImportSuccess() {
-                        importStatusTextView.setText("Successfully imported lesson!!");
+                        importStatusTextView.setText("Successfully imported!!");
                         importingInProgress = false;
-
+                        Toast.makeText(cordova.getActivity(),"Successfully imported!!",Toast.LENGTH_SHORT).show();
                         hide();
                     }
 
@@ -463,13 +499,13 @@ public class SplashScreen extends CordovaPlugin {
                                 statusText = "The file is already imported. Please select a new file";
                                 break;
                             default:
-                                statusText = "Successfully imported lesson!!";
+                                statusText = "Import failed!!";
                                 break;
                         }
 
                         importStatusTextView.setText(statusText);
                         importingInProgress = false;
-
+                        Toast.makeText(cordova.getActivity(),statusText,Toast.LENGTH_SHORT).show();
                         hide();
                     }
 
@@ -483,7 +519,7 @@ public class SplashScreen extends CordovaPlugin {
                 if (isImport) {
                     displaySplashScreen();
                     importingInProgress = true;
-                    importStatusTextView.setText("Importing lesson...");
+                    importStatusTextView.setText("Importing...");
                 }
             }
 
