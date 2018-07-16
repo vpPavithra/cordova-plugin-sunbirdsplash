@@ -135,6 +135,21 @@
                     android:scheme="content" />
             </intent-filter>
 
+            <!--Deep link clicked/called from content player-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/player_deeplink_scheme" />
+                <!--host to navigate  related contents-->
+                <data android:host="all" />
+                <!--host to navigate content details-->
+                <data android:host="c" />
+                <!--Host to add tag-->
+                <data android:host="settag" />
+            </intent-filter>
+
       </config-file>
 
       <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
