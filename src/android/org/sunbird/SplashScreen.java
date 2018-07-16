@@ -405,30 +405,7 @@ public class SplashScreen extends CordovaPlugin {
                 String[] pair = newString.split("/");
 
                 if (pair[1].equalsIgnoreCase("public")) {
-                    String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
-
-                    ContentDetailsRequest request = new ContentDetailsRequest.Builder()
-                            .forContent(identifier)
-                            .build();
-
-                    GenieService.getAsyncService().getContentService()
-                            .getContentDetails(request, new IResponseHandler<Content>() {
-                                @Override
-                                public void onSuccess(GenieResponse<Content> genieResponse) {
-                                    String response = GsonUtil.toJson(genieResponse);
-                                    try {
-                                        mLastEvent = new JSONObject(response);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    consumeEvents();
-                                }
-
-                                @Override
-                                public void onError(GenieResponse<Content> genieResponse) {
-                                    consumeEvents();
-                                }
-                            });
+                    launchContentDetails(url);
                 } else if (pair[1].equalsIgnoreCase("dial")) {
                     JSONObject jsonObject = new JSONObject();
                     try {
@@ -444,30 +421,10 @@ public class SplashScreen extends CordovaPlugin {
                 } else if (pair[1].equalsIgnoreCase("play")
                         && (pair[2].equalsIgnoreCase("collection")
                         || pair[2].equalsIgnoreCase("content"))) {
-                    String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
-
-                    ContentDetailsRequest request = new ContentDetailsRequest.Builder()
-                            .forContent(identifier)
-                            .build();
-
-                    GenieService.getAsyncService().getContentService()
-                            .getContentDetails(request, new IResponseHandler<Content>() {
-                                @Override
-                                public void onSuccess(GenieResponse<Content> genieResponse) {
-                                    String response = GsonUtil.toJson(genieResponse);
-                                    try {
-                                        mLastEvent = new JSONObject(response);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    consumeEvents();
-                                }
-
-                                @Override
-                                public void onError(GenieResponse<Content> genieResponse) {
-                                    consumeEvents();
-                                }
-                            });
+                    launchContentDetails(url);
+                } else if (pair[1].equalsIgnoreCase("learn")
+                        && pair[2].equalsIgnoreCase("course")) {
+                    launchContentDetails(url);
                 }
 
             }
@@ -531,6 +488,33 @@ public class SplashScreen extends CordovaPlugin {
         });
 
 
+    }
+
+    private void launchContentDetails(String url) {
+        String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
+
+        ContentDetailsRequest request = new ContentDetailsRequest.Builder()
+                .forContent(identifier)
+                .build();
+
+        GenieService.getAsyncService().getContentService()
+                .getContentDetails(request, new IResponseHandler<Content>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Content> genieResponse) {
+                        String response = GsonUtil.toJson(genieResponse);
+                        try {
+                            mLastEvent = new JSONObject(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        consumeEvents();
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Content> genieResponse) {
+                        consumeEvents();
+                    }
+                });
     }
 
 }
