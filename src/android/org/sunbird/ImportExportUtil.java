@@ -13,6 +13,8 @@ import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.ProfileImportRequest;
+import org.ekstep.genieservices.commons.bean.ProfileImportResponse;
 import org.ekstep.genieservices.commons.bean.TelemetryImportRequest;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
@@ -99,6 +101,24 @@ public final class ImportExportUtil {
                 @Override
                 public void onError(GenieResponse<Void> genieResponse) {
                   delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+                }
+            });
+        }else if(extension.equalsIgnoreCase("epar")){
+            ProfileImportRequest request = new ProfileImportRequest.Builder().fromFilePath(filePath).build();
+            GenieService.getAsyncService().getUserService().importProfile(request, new IResponseHandler<ProfileImportResponse>() {
+                @Override
+                public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
+                    if (isAttachment) {
+                        File file = new File(filePath);
+                        file.delete();
+                    }
+
+                    delegate.onImportSuccess();
+                }
+
+                @Override
+                public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
+                    delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
                 }
             });
         }
