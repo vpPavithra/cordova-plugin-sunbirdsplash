@@ -5,7 +5,7 @@ import android.net.Uri;
 public class DeepLinkUtility {
 
     public static boolean isDeepLink(Uri intentData){
-        if (intentData.getScheme().equalsIgnoreCase("ekstep")) {
+        if (intentData.getScheme().equalsIgnoreCase("ekstep") || intentData.getScheme().equalsIgnoreCase("sunbird")) {
             return true;
         }
 
