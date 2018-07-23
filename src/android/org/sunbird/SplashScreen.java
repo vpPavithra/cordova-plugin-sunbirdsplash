@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -389,6 +390,27 @@ public class SplashScreen extends CordovaPlugin {
             @Override
             public void validLocalDeepLink() {
                 Log.i("SplashScreen", "validLocalDeepLink");
+
+                try {
+                    Uri intentUri = intent.getData();
+
+                    JSONObject response = new JSONObject();
+
+                    response.put("type", "contentDetails");
+
+                    if (intentUri != null) {
+                        response.putOpt("id", intentUri.getLastPathSegment());
+                        for (String key: intentUri.getQueryParameterNames()) {
+                            response.putOpt(key, intentUri.getQueryParameter(key));
+                        }
+                    }
+
+                    mLastEvent = response;
+                    consumeEvents();
+                } catch (JSONException ex) {
+                    Log.e("SplashScreen", ex.toString());
+                }
+
             }
 
             @Override
@@ -433,51 +455,7 @@ public class SplashScreen extends CordovaPlugin {
             public void notAValidDeepLink() {
                 Log.i("SplashScreen", "notAValidDeepLink");
 
-                boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
-                    @Override
-                    public void onImportSuccess() {
-                        importStatusTextView.setText("Successfully imported!!");
-                        importingInProgress = false;
-                        Toast.makeText(cordova.getActivity(),"Successfully imported!!",Toast.LENGTH_SHORT).show();
-                        hide();
-                    }
-
-                    @Override
-                    public void onImportFailure(ContentImportStatus status) {
-                        String statusText = null;
-                        switch (status) {
-                            case NOT_COMPATIBLE:
-                                statusText = "Import failed. Lesson not supported.";
-                                break;
-                            case CONTENT_EXPIRED:
-                                statusText = "Import failed. Lesson expired";
-                                break;
-                            case ALREADY_EXIST:
-                                statusText = "The file is already imported. Please select a new file";
-                                break;
-                            default:
-                                statusText = "Import failed!!";
-                                break;
-                        }
-
-                        importStatusTextView.setText(statusText);
-                        importingInProgress = false;
-                        Toast.makeText(cordova.getActivity(),statusText,Toast.LENGTH_SHORT).show();
-                        hide();
-                    }
-
-                    @Override
-                    public void onOutDatedEcarFound() {
-                        importingInProgress = false;
-                        hide();
-                    }
-                }, intent, true);
-
-                if (isImport) {
-                    displaySplashScreen();
-                    importingInProgress = true;
-                    importStatusTextView.setText("Importing...");
-                }
+                importEcarFile(intent);
             }
 
             @Override
@@ -488,6 +466,54 @@ public class SplashScreen extends CordovaPlugin {
         });
 
 
+    }
+
+    private void importEcarFile(Intent intent) {
+        boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
+            @Override
+            public void onImportSuccess() {
+                importStatusTextView.setText("Successfully imported!!");
+                importingInProgress = false;
+                Toast.makeText(cordova.getActivity(),"Successfully imported!!",Toast.LENGTH_SHORT).show();
+                hide();
+            }
+
+            @Override
+            public void onImportFailure(ContentImportStatus status) {
+                String statusText = null;
+                switch (status) {
+                    case NOT_COMPATIBLE:
+                        statusText = "Import failed. Lesson not supported.";
+                        break;
+                    case CONTENT_EXPIRED:
+                        statusText = "Import failed. Lesson expired";
+                        break;
+                    case ALREADY_EXIST:
+                        statusText = "The file is already imported. Please select a new file";
+                        break;
+                    default:
+                        statusText = "Import failed!!";
+                        break;
+                }
+
+                importStatusTextView.setText(statusText);
+                importingInProgress = false;
+                Toast.makeText(cordova.getActivity(),statusText,Toast.LENGTH_SHORT).show();
+                hide();
+            }
+
+            @Override
+            public void onOutDatedEcarFound() {
+                importingInProgress = false;
+                hide();
+            }
+        }, intent, true);
+
+        if (isImport) {
+            displaySplashScreen();
+            importingInProgress = true;
+            importStatusTextView.setText("Importing...");
+        }
     }
 
     private void launchContentDetails(String url) {

@@ -197,13 +197,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/player_deeplink_scheme" />
-                <!--host to navigate  related contents-->
-                <data android:host="all" />
-                <!--host to navigate content details-->
-                <data android:host="c" />
-                <!--Host to add tag-->
-                <data android:host="settag" />
+                <data android:host="content-details" android:scheme="sunbird" />
+
             </intent-filter>
 
       </config-file>
