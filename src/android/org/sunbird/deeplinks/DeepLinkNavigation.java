@@ -63,7 +63,7 @@ public class DeepLinkNavigation {
 
     public void validateAndHandleDeepLink(Uri intentData, IValidateDeepLink iValidateDeepLink) {
         if (intentData != null) {
-            if (DeepLinkUtility.isDeepLink(intentData)) { // If deeplink clicked from content's last page.
+            if (DeepLinkUtility.isDeepLink(mActivity,intentData)) { // If deeplink clicked from content's last page.
                 if (iValidateDeepLink != null) {
                     iValidateDeepLink.validLocalDeepLink();
                 }

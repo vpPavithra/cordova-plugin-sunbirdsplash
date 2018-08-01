@@ -197,7 +197,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="content-details" android:scheme="sunbird" />
+                <data android:host="c" android:scheme="@string/deeplink_base_url" />
 
             </intent-filter>
 
