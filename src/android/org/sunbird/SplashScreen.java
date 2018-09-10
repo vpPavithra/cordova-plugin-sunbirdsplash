@@ -347,6 +347,7 @@ public class SplashScreen extends CordovaPlugin {
         } else {
             Glide.with(context)
                     .load(logoUrl)
+                    .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(drawableId)
                     .into(splashImageView);
