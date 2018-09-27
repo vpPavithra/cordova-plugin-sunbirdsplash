@@ -33,9 +33,13 @@ import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.Content;
 import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.ImportContentProgress;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.bean.telemetry.Impression;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
+import org.ekstep.genieservices.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +49,8 @@ import org.sunbird.util.ImportExportUtil;
 import java.util.ArrayList;
 
 public class SplashScreen extends CordovaPlugin {
+
+    private static final String TAG = "SplashScreen";
 
     private static final String LOG_TAG = "SplashScreen";
     private static final String KEY_LOGO = "app_logo";
@@ -67,6 +73,18 @@ public class SplashScreen extends CordovaPlugin {
     private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
                 cordova.getActivity().getApplicationInfo().packageName);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onContentImport(ImportContentProgress importContentProgress) throws InterruptedException {
+
+        String msg = "Importing" +
+                " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ") "
+                + "Please wait ";
+
+        Log.e(TAG, "onContentImport: - " + msg);
+
+        importStatusTextView.setText(msg);
     }
 
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
@@ -111,8 +129,22 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.isSubscriberRegistered(this)) {
+            EventBus.registerSubscriber(this);
+        }
+    }
+
+    @Override
     public void onPause(boolean multitasking) {
         this.hideSplashScreen(true);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.unregisterSubscriber(this);
     }
 
     @Override
@@ -401,7 +433,7 @@ public class SplashScreen extends CordovaPlugin {
 
                     if (intentUri != null) {
                         response.putOpt("id", intentUri.getLastPathSegment());
-                        for (String key: intentUri.getQueryParameterNames()) {
+                        for (String key : intentUri.getQueryParameterNames()) {
                             response.putOpt(key, intentUri.getQueryParameter(key));
                         }
                     }
@@ -475,7 +507,7 @@ public class SplashScreen extends CordovaPlugin {
             public void onImportSuccess() {
                 importStatusTextView.setText("Successfully imported!!");
                 importingInProgress = false;
-                Toast.makeText(cordova.getActivity(),"Successfully imported!!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(cordova.getActivity(), "Successfully imported!!", Toast.LENGTH_SHORT).show();
                 hide();
             }
 
@@ -499,7 +531,7 @@ public class SplashScreen extends CordovaPlugin {
 
                 importStatusTextView.setText(statusText);
                 importingInProgress = false;
-                Toast.makeText(cordova.getActivity(),statusText,Toast.LENGTH_SHORT).show();
+                Toast.makeText(cordova.getActivity(), statusText, Toast.LENGTH_SHORT).show();
                 hide();
             }
 
