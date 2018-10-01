@@ -44,11 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sunbird.deeplinks.DeepLinkNavigation;
-import org.sunbird.locales.EnglishLocale;
-import org.sunbird.locales.HindiLocale;
-import org.sunbird.locales.MarathiLocale;
-import org.sunbird.locales.TamilLocale;
-import org.sunbird.locales.TeluguLocale;
+import org.sunbird.locales.Locale;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
@@ -63,17 +59,6 @@ public class SplashScreen extends CordovaPlugin {
 
     private static final int DEFAULT_SPLASHSCREEN_DURATION = 3000;
     private static final int DEFAULT_FADE_DURATION = 500;
-    private static Dialog splashDialog;
-    private ImageView splashImageView;
-    private TextView importStatusTextView;
-    private int orientation;
-    private SharedPreferences sharedPreferences;
-    private volatile boolean importingInProgress;
-    private DeepLinkNavigation mDeepLinkNavigation;
-
-    private ArrayList<CallbackContext> mHandler = new ArrayList<>();
-    private JSONObject mLastEvent;
-    private String localeSelected;
 
     private static final int IMPORT_SUCCESS = 1;
     private static final int IMPORT_ERROR = 2;
@@ -84,11 +69,16 @@ public class SplashScreen extends CordovaPlugin {
     private static final int CONTENT_EXPIRED = 7;
     private static final int ALREADY_EXIST = 8;
 
-    private static final String LOCALE_ENGLISH = "en";
-    private static final String LOCALE_HINDI = "hi";
-    private static final String LOCALE_MARATHI = "mr";
-    private static final String LOCALE_TAMIL = "ta";
-    private static final String LOCALE_TELUGU = "te";
+    private static Dialog splashDialog;
+    private ImageView splashImageView;
+    private TextView importStatusTextView;
+    private int orientation;
+    private SharedPreferences sharedPreferences;
+    private volatile boolean importingInProgress;
+    private DeepLinkNavigation mDeepLinkNavigation;
+    private ArrayList<CallbackContext> mHandler = new ArrayList<>();
+    private JSONObject mLastEvent;
+    private String localeSelected;
 
     private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
@@ -112,100 +102,100 @@ public class SplashScreen extends CordovaPlugin {
         String message = null;
         switch (type) {
         case IMPORT_SUCCESS:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.IMPORT_SUCCESS;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_SUCCESS;
             } else {
-                message = EnglishLocale.IMPORT_SUCCESS;
+                message = Locale.En.IMPORT_SUCCESS;
             }
             break;
 
         case IMPORT_ERROR:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.IMPORT_ERROR;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_ERROR;
             } else {
-                message = EnglishLocale.IMPORT_ERROR;
+                message = Locale.En.IMPORT_ERROR;
             }
             break;
 
         case IMPORT_PROGRESS:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.IMPORT_PROGRESS;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_PROGRESS;
             } else {
-                message = EnglishLocale.IMPORT_PROGRESS;
+                message = Locale.En.IMPORT_PROGRESS;
             }
             break;
 
         case IMPORTING_COUNT:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.IMPORTING_COUNT;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORTING_COUNT;
             } else {
-                message = EnglishLocale.IMPORTING_COUNT;
+                message = Locale.En.IMPORTING_COUNT;
             }
             break;
 
         case NOT_COMPATIBLE:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.NOT_COMPATIBLE;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.NOT_COMPATIBLE;
             } else {
-                message = EnglishLocale.NOT_COMPATIBLE;
+                message = Locale.En.NOT_COMPATIBLE;
             }
             break;
 
         case CONTENT_EXPIRED:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.CONTENT_EXPIRED;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.CONTENT_EXPIRED;
             } else {
-                message = EnglishLocale.CONTENT_EXPIRED;
+                message = Locale.En.CONTENT_EXPIRED;
             }
             break;
 
         case ALREADY_EXIST:
-            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
-                message = HindiLocale.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
-                message = MarathiLocale.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
-                message = TeluguLocale.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
-                message = TamilLocale.ALREADY_EXIST;
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.ALREADY_EXIST;
             } else {
-                message = EnglishLocale.ALREADY_EXIST;
+                message = Locale.En.ALREADY_EXIST;
             }
             break;
 
@@ -397,7 +387,6 @@ public class SplashScreen extends CordovaPlugin {
                 }
             });
         }
-
     }
 
     /**
@@ -617,7 +606,6 @@ public class SplashScreen extends CordovaPlugin {
                 consumeEvents();
             }
         });
-
     }
 
     private void importEcarFile(Intent intent) {
