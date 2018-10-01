@@ -44,6 +44,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sunbird.deeplinks.DeepLinkNavigation;
+import org.sunbird.locales.EnglishLocale;
+import org.sunbird.locales.HindiLocale;
+import org.sunbird.locales.MarathiLocale;
+import org.sunbird.locales.TamilLocale;
+import org.sunbird.locales.TeluguLocale;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
@@ -55,7 +60,6 @@ public class SplashScreen extends CordovaPlugin {
     private static final String LOG_TAG = "SplashScreen";
     private static final String KEY_LOGO = "app_logo";
     private static final String KEY_NAME = "app_name";
-
 
     private static final int DEFAULT_SPLASHSCREEN_DURATION = 3000;
     private static final int DEFAULT_FADE_DURATION = 500;
@@ -69,6 +73,22 @@ public class SplashScreen extends CordovaPlugin {
 
     private ArrayList<CallbackContext> mHandler = new ArrayList<>();
     private JSONObject mLastEvent;
+    private String localeSelected;
+
+    private static final int IMPORT_SUCCESS = 1;
+    private static final int IMPORT_ERROR = 2;
+    private static final int IMPORT_PROGRESS = 3;
+    private static final int IMPORTING_COUNT = 4;
+    private static final int IMPORT_FAILED = 5;
+    private static final int NOT_COMPATIBLE = 6;
+    private static final int CONTENT_EXPIRED = 7;
+    private static final int ALREADY_EXIST = 8;
+
+    private static final String LOCALE_ENGLISH = "en";
+    private static final String LOCALE_HINDI = "hi";
+    private static final String LOCALE_MARATHI = "mr";
+    private static final String LOCALE_TAMIL = "ta";
+    private static final String LOCALE_TELUGU = "te";
 
     private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
@@ -78,13 +98,120 @@ public class SplashScreen extends CordovaPlugin {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onContentImport(ImportContentProgress importContentProgress) throws InterruptedException {
 
-        String msg = "Importing" +
-                " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ") "
-                + "Please wait ";
+        // get the locale set by user from the mobile
+        localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
 
-        Log.e(TAG, "onContentImport: - " + msg);
+        String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
+
+        msg = msg + " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ")";
 
         importStatusTextView.setText(msg);
+    }
+
+    private String getRelevantMessage(String localeSelected, int type) {
+        String message = null;
+        switch (type) {
+        case IMPORT_SUCCESS:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.IMPORT_SUCCESS;
+            } else {
+                message = EnglishLocale.IMPORT_SUCCESS;
+            }
+            break;
+
+        case IMPORT_ERROR:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.IMPORT_ERROR;
+            } else {
+                message = EnglishLocale.IMPORT_ERROR;
+            }
+            break;
+
+        case IMPORT_PROGRESS:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.IMPORT_PROGRESS;
+            } else {
+                message = EnglishLocale.IMPORT_PROGRESS;
+            }
+            break;
+
+        case IMPORTING_COUNT:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.IMPORTING_COUNT;
+            } else {
+                message = EnglishLocale.IMPORTING_COUNT;
+            }
+            break;
+
+        case NOT_COMPATIBLE:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.NOT_COMPATIBLE;
+            } else {
+                message = EnglishLocale.NOT_COMPATIBLE;
+            }
+            break;
+
+        case CONTENT_EXPIRED:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.CONTENT_EXPIRED;
+            } else {
+                message = EnglishLocale.CONTENT_EXPIRED;
+            }
+            break;
+
+        case ALREADY_EXIST:
+            if (localeSelected.equalsIgnoreCase(LOCALE_HINDI)) {
+                message = HindiLocale.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_MARATHI)) {
+                message = MarathiLocale.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TELUGU)) {
+                message = TeluguLocale.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(LOCALE_TAMIL)) {
+                message = TamilLocale.ALREADY_EXIST;
+            } else {
+                message = EnglishLocale.ALREADY_EXIST;
+            }
+            break;
+
+        }
+
+        return message;
     }
 
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
@@ -99,9 +226,11 @@ public class SplashScreen extends CordovaPlugin {
     private int getSplashId() {
         int drawableId = 0;
         String splashResource = "screen";
-        drawableId = cordova.getActivity().getResources().getIdentifier(splashResource, "drawable", cordova.getActivity().getClass().getPackage().getName());
+        drawableId = cordova.getActivity().getResources().getIdentifier(splashResource, "drawable",
+                cordova.getActivity().getClass().getPackage().getName());
         if (drawableId == 0) {
-            drawableId = cordova.getActivity().getResources().getIdentifier(splashResource, "drawable", cordova.getActivity().getPackageName());
+            drawableId = cordova.getActivity().getResources().getIdentifier(splashResource, "drawable",
+                    cordova.getActivity().getPackageName());
         }
         return drawableId;
     }
@@ -184,15 +313,14 @@ public class SplashScreen extends CordovaPlugin {
             return false;
         }
 
-//        callbackContext.success();
+        // callbackContext.success();
         return true;
     }
 
     private void cacheImageAndAppName(String appName, String logoUrl) {
         int dim = getSplashDim(cordova.getActivity().getWindowManager().getDefaultDisplay());
         sharedPreferences.edit().putString(KEY_NAME, appName).putString(KEY_LOGO, logoUrl).apply();
-        Glide.with(cordova.getActivity())
-                .load(logoUrl).downloadOnly(dim, dim);
+        Glide.with(cordova.getActivity()).load(logoUrl).downloadOnly(dim, dim);
     }
 
     @Override
@@ -272,7 +400,6 @@ public class SplashScreen extends CordovaPlugin {
 
     }
 
-
     /**
      * Shows the splash screen over the full Activity
      */
@@ -289,7 +416,8 @@ public class SplashScreen extends CordovaPlugin {
         final int fadeSplashScreenDuration = getFadeDuration();
         final int effectiveSplashDuration = Math.max(0, splashscreenTime - fadeSplashScreenDuration);
 
-        // Prevent to show the splash dialog if the activity is in the process of finishing
+        // Prevent to show the splash dialog if the activity is in the process of
+        // finishing
         if (cordova.getActivity().isFinishing()) {
             return;
         }
@@ -318,8 +446,8 @@ public class SplashScreen extends CordovaPlugin {
                 // Create and show the dialog
                 splashDialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
                 // check to see if the splash screen should be full screen
-                if ((cordova.getActivity().getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                        == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
+                if ((cordova.getActivity().getWindow().getAttributes().flags
+                        & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
                     splashDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
@@ -338,7 +466,8 @@ public class SplashScreen extends CordovaPlugin {
     @NonNull
     private TextView createAppNameView(Context context, String appName) {
         TextView appNameTextView = new TextView(context);
-        LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT);
         textViewParam.setMargins(10, 10, 10, 10);
         appNameTextView.setText(appName);
         appNameTextView.setTextSize(20);
@@ -351,7 +480,8 @@ public class SplashScreen extends CordovaPlugin {
     @NonNull
     private void createImportStatusView(Context context) {
         importStatusTextView = new TextView(context);
-        LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT);
         textViewParam.setMargins(10, 10, 10, 10);
         importStatusTextView.setTextSize(10);
         importStatusTextView.setTextColor(Color.GRAY);
@@ -361,28 +491,24 @@ public class SplashScreen extends CordovaPlugin {
 
     private void createLogoImageView(Context context, int splashDim, int drawableId, String logoUrl) {
         splashImageView = new ImageView(context);
-//        splashImageView.setImageResource(drawableId);
+        // splashImageView.setImageResource(drawableId);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(splashDim, splashDim);
         layoutParams.setMargins(10, splashDim / 4, 10, 0);
         splashImageView.setLayoutParams(layoutParams);
 
-
         splashImageView.setMinimumHeight(splashDim);
         splashImageView.setMinimumWidth(splashDim);
 
-        // TODO: Use the background color of the webView's parent instead of using the preference.
+        // TODO: Use the background color of the webView's parent instead of using the
+        // preference.
 
         splashImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         if (TextUtils.isEmpty(logoUrl)) {
             splashImageView.setImageResource(drawableId);
         } else {
-            Glide.with(context)
-                    .load(logoUrl)
-                    .asBitmap()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(drawableId)
-                    .into(splashImageView);
+            Glide.with(context).load(logoUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(drawableId).into(splashImageView);
         }
 
     }
@@ -403,7 +529,6 @@ public class SplashScreen extends CordovaPlugin {
         handleIntentForDeeplinking(intent);
     }
 
-
     private void consumeEvents() {
         if (this.mHandler.size() == 0 || mLastEvent == null) {
             return;
@@ -419,10 +544,12 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void handleIntentForDeeplinking(Intent intent) {
+        // get the locale set by user from the mobile
+        localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
+
         mDeepLinkNavigation.validateAndHandleDeepLink(intent, new DeepLinkNavigation.IValidateDeepLink() {
             @Override
             public void validLocalDeepLink() {
-                Log.i("SplashScreen", "validLocalDeepLink");
 
                 try {
                     Uri intentUri = intent.getData();
@@ -448,8 +575,6 @@ public class SplashScreen extends CordovaPlugin {
 
             @Override
             public void validServerDeepLink() {
-                Log.i("SplashScreen", "validServerDeepLink");
-
                 if (intent.getData() == null) {
                     return;
                 }
@@ -474,11 +599,9 @@ public class SplashScreen extends CordovaPlugin {
 
                     consumeEvents();
                 } else if (pair[1].equalsIgnoreCase("play")
-                        && (pair[2].equalsIgnoreCase("collection")
-                        || pair[2].equalsIgnoreCase("content"))) {
+                        && (pair[2].equalsIgnoreCase("collection") || pair[2].equalsIgnoreCase("content"))) {
                     launchContentDetails(url);
-                } else if (pair[1].equalsIgnoreCase("learn")
-                        && pair[2].equalsIgnoreCase("course")) {
+                } else if (pair[1].equalsIgnoreCase("learn") && pair[2].equalsIgnoreCase("course")) {
                     launchContentDetails(url);
                 }
 
@@ -486,18 +609,14 @@ public class SplashScreen extends CordovaPlugin {
 
             @Override
             public void notAValidDeepLink() {
-                Log.i("SplashScreen", "notAValidDeepLink");
-
                 importEcarFile(intent);
             }
 
             @Override
             public void onTagDeepLinkFound(String tagName, String description, String startDate, String endDate) {
-                Log.i("SplashScreen", "onTagDeepLinkFound");
                 consumeEvents();
             }
         });
-
 
     }
 
@@ -505,9 +624,11 @@ public class SplashScreen extends CordovaPlugin {
         boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
             @Override
             public void onImportSuccess() {
-                importStatusTextView.setText("Successfully imported!!");
+                String message = getRelevantMessage(localeSelected, IMPORT_SUCCESS);
+                importStatusTextView.setText(message);
                 importingInProgress = false;
-                Toast.makeText(cordova.getActivity(), "Successfully imported!!", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(cordova.getActivity(), message, Toast.LENGTH_SHORT).show();
                 hide();
             }
 
@@ -515,18 +636,18 @@ public class SplashScreen extends CordovaPlugin {
             public void onImportFailure(ContentImportStatus status) {
                 String statusText = null;
                 switch (status) {
-                    case NOT_COMPATIBLE:
-                        statusText = "Import failed. Lesson not supported.";
-                        break;
-                    case CONTENT_EXPIRED:
-                        statusText = "Import failed. Lesson expired";
-                        break;
-                    case ALREADY_EXIST:
-                        statusText = "The file is already imported. Please select a new file";
-                        break;
-                    default:
-                        statusText = "Import failed!!";
-                        break;
+                case NOT_COMPATIBLE:
+                    statusText = getRelevantMessage(localeSelected, NOT_COMPATIBLE);
+                    break;
+                case CONTENT_EXPIRED:
+                    statusText = getRelevantMessage(localeSelected, CONTENT_EXPIRED);
+                    break;
+                case ALREADY_EXIST:
+                    statusText = getRelevantMessage(localeSelected, ALREADY_EXIST);
+                    break;
+                default:
+                    statusText = getRelevantMessage(localeSelected, IMPORT_ERROR);
+                    break;
                 }
 
                 importStatusTextView.setText(statusText);
@@ -545,35 +666,34 @@ public class SplashScreen extends CordovaPlugin {
         if (isImport) {
             displaySplashScreen();
             importingInProgress = true;
-            importStatusTextView.setText("Importing...");
+
+            String message = getRelevantMessage(localeSelected, IMPORT_PROGRESS);
+            importStatusTextView.setText(message);
         }
     }
 
     private void launchContentDetails(String url) {
         String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
 
-        ContentDetailsRequest request = new ContentDetailsRequest.Builder()
-                .forContent(identifier)
-                .build();
+        ContentDetailsRequest request = new ContentDetailsRequest.Builder().forContent(identifier).build();
 
-        GenieService.getAsyncService().getContentService()
-                .getContentDetails(request, new IResponseHandler<Content>() {
-                    @Override
-                    public void onSuccess(GenieResponse<Content> genieResponse) {
-                        String response = GsonUtil.toJson(genieResponse);
-                        try {
-                            mLastEvent = new JSONObject(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        consumeEvents();
-                    }
+        GenieService.getAsyncService().getContentService().getContentDetails(request, new IResponseHandler<Content>() {
+            @Override
+            public void onSuccess(GenieResponse<Content> genieResponse) {
+                String response = GsonUtil.toJson(genieResponse);
+                try {
+                    mLastEvent = new JSONObject(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                consumeEvents();
+            }
 
-                    @Override
-                    public void onError(GenieResponse<Content> genieResponse) {
-                        consumeEvents();
-                    }
-                });
+            @Override
+            public void onError(GenieResponse<Content> genieResponse) {
+                consumeEvents();
+            }
+        });
     }
 
 }
