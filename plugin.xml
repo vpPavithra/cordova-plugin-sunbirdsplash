@@ -207,6 +207,11 @@
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
+      <source-file src="src/android/org/sunbird/locales/EnglishLocale.java" target-dir="src/org/sunbird/locales" />
+      <source-file src="src/android/org/sunbird/locales/HindiLocale.java" target-dir="src/org/sunbird/locales" />
+      <source-file src="src/android/org/sunbird/locales/MarathiLocale.java" target-dir="src/org/sunbird/locales" />
+      <source-file src="src/android/org/sunbird/locales/TamilLocale.java" target-dir="src/org/sunbird/locales" />
+      <source-file src="src/android/org/sunbird/locales/TeluguLocale.java" target-dir="src/org/sunbird/locales" />
 
     </platform>
 
