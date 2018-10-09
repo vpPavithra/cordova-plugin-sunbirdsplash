@@ -49,6 +49,7 @@ public class SplashScreen extends CordovaPlugin {
     private static final String LOG_TAG = "SplashScreen";
     private static final String KEY_LOGO = "app_logo";
     private static final String KEY_NAME = "app_name";
+    private static final String KEY_IS_FIRST_TIME = "is_first_time";
 
 
     private static final int DEFAULT_SPLASHSCREEN_DURATION = 3000;
@@ -219,13 +220,25 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
-    private void generateImpressionEvent() {
+    private void generateTelemetry() {
         Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
+        boolean isFirstTime = sharedPreferences.getBoolean(KEY_IS_FIRST_TIME,true);
+        if(isFirstTime){
+            sharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
+        }
+        org.ekstep.genieservices.commons.bean.telemetry.Log log = new org.ekstep.genieservices.commons.bean.telemetry.Log.Builder()
+                .environment("home")
+                .type("view")
+                .level(org.ekstep.genieservices.commons.bean.telemetry.Log.Level.INFO)
+                .message("splash")
+                .addParam("isFirstTime", isFirstTime)
+                .build();
+
         GenieAsyncService genieAsyncService = GenieService.getAsyncService();
 
         if (genieAsyncService != null && genieAsyncService.getTelemetryService() != null) {
 
-            genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+            IResponseHandler<Void> iResponseHandler=new IResponseHandler<Void>() {
                 @Override
                 public void onSuccess(GenieResponse<Void> genieResponse) {
 
@@ -235,18 +248,29 @@ public class SplashScreen extends CordovaPlugin {
                 public void onError(GenieResponse<Void> genieResponse) {
 
                 }
+            };
+            genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+                @Override
+                public void onSuccess(GenieResponse<Void> genieResponse) {
+                    genieAsyncService.getTelemetryService().saveTelemetry(log,iResponseHandler);
+                }
+
+                @Override
+                public void onError(GenieResponse<Void> genieResponse) {
+
+                }
             });
+
         }
 
     }
-
 
     /**
      * Shows the splash screen over the full Activity
      */
     @SuppressWarnings("deprecation")
     private void displaySplashScreen() {
-        generateImpressionEvent();
+        generateTelemetry();
         final int splashscreenTime = DEFAULT_SPLASHSCREEN_DURATION;
         final int drawableId = getSplashId();
 
