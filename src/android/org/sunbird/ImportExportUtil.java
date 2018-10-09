@@ -37,7 +37,8 @@ public final class ImportExportUtil {
      * @param intent
      * @return
      */
-    public static boolean initiateImportFile(Activity activity, IImport callback, Intent intent, boolean showProgressDialog) {
+    public static boolean initiateImportFile(Activity activity, IImport callback, Intent intent,
+            boolean showProgressDialog) {
         Uri uri = intent.getData();
 
         if (uri == null) {
@@ -45,7 +46,8 @@ public final class ImportExportUtil {
         }
 
         if (intent.getScheme().equals("content")) {
-            return importGenieSupportedFile(activity, callback, getAttachmentFilePath(activity.getApplicationContext(), uri), true, showProgressDialog);
+            return importGenieSupportedFile(activity, callback,
+                    getAttachmentFilePath(activity.getApplicationContext(), uri), true, showProgressDialog);
         } else if (intent.getScheme().equals("file")) {
             return importGenieSupportedFile(activity, callback, uri.getPath(), false, showProgressDialog);
         } else {
@@ -54,7 +56,8 @@ public final class ImportExportUtil {
 
     }
 
-    private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath, final boolean isAttachment, boolean showProgressDialog) {
+    private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
+            final boolean isAttachment, boolean showProgressDialog) {
         String extension = getFileExtension(filePath);
 
         if (!isValidExtension(filePath)) {
@@ -85,7 +88,7 @@ public final class ImportExportUtil {
                     delegate.onOutDatedEcarFound();
                 }
             });
-        }else if(extension.equalsIgnoreCase("gsa")){
+        } else if (extension.equalsIgnoreCase("gsa")) {
             TelemetryImportRequest request = new TelemetryImportRequest.Builder().fromFilePath(filePath).build();
             GenieService.getAsyncService().getTelemetryService().importTelemetry(request, new IResponseHandler<Void>() {
                 @Override
@@ -100,27 +103,28 @@ public final class ImportExportUtil {
 
                 @Override
                 public void onError(GenieResponse<Void> genieResponse) {
-                  delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
-                }
-            });
-        }else if(extension.equalsIgnoreCase("epar")){
-            ProfileImportRequest request = new ProfileImportRequest.Builder().fromFilePath(filePath).build();
-            GenieService.getAsyncService().getUserService().importProfile(request, new IResponseHandler<ProfileImportResponse>() {
-                @Override
-                public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
-                    if (isAttachment) {
-                        File file = new File(filePath);
-                        file.delete();
-                    }
-
-                    delegate.onImportSuccess();
-                }
-
-                @Override
-                public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
                     delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
                 }
             });
+        } else if (extension.equalsIgnoreCase("epar")) {
+            ProfileImportRequest request = new ProfileImportRequest.Builder().fromFilePath(filePath).build();
+            GenieService.getAsyncService().getUserService().importProfile(request,
+                    new IResponseHandler<ProfileImportResponse>() {
+                        @Override
+                        public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
+                            if (isAttachment) {
+                                File file = new File(filePath);
+                                file.delete();
+                            }
+
+                            delegate.onImportSuccess();
+                        }
+
+                        @Override
+                        public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
+                            delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+                        }
+                    });
         }
 
         return true;
@@ -134,7 +138,8 @@ public final class ImportExportUtil {
         String name = null;
 
         try {
-            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.MediaColumns.DISPLAY_NAME}, null, null, null);
+            Cursor cursor = context.getContentResolver().query(uri,
+                    new String[] { MediaStore.MediaColumns.DISPLAY_NAME }, null, null, null);
             cursor.moveToFirst();
             int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
             if (nameIndex >= 0) {
@@ -180,38 +185,39 @@ public final class ImportExportUtil {
         builder.fromFilePath(filePath);
 
         builder.toFolder("/storage/emulated/0/Android/data/org.sunbird.app/files");
-        GenieService.getAsyncService().getContentService().importEcar(builder.build(), new IResponseHandler<List<ContentImportResponse>>() {
-            @Override
-            public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
+        GenieService.getAsyncService().getContentService().importEcar(builder.build(),
+                new IResponseHandler<List<ContentImportResponse>>() {
+                    @Override
+                    public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
 
-                List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
-                if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
-                    ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
-                    switch (importStatus) {
-                        case NOT_COMPATIBLE:
-                            iImport.onImportFailure(ContentImportStatus.NOT_COMPATIBLE);
-                            break;
-                        case CONTENT_EXPIRED:
-                            iImport.onImportFailure(ContentImportStatus.CONTENT_EXPIRED);
-                            break;
-                        case ALREADY_EXIST:
-                            iImport.onImportFailure(ContentImportStatus.ALREADY_EXIST);
-                            break;
-                        default:
+                        List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
+                        if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
+                            ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
+                            switch (importStatus) {
+                            case NOT_COMPATIBLE:
+                                iImport.onImportFailure(ContentImportStatus.NOT_COMPATIBLE);
+                                break;
+                            case CONTENT_EXPIRED:
+                                iImport.onImportFailure(ContentImportStatus.CONTENT_EXPIRED);
+                                break;
+                            case ALREADY_EXIST:
+                                iImport.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+                                break;
+                            default:
+                                iImport.onImportSuccess();
+                                break;
+
+                            }
+                        } else {
                             iImport.onImportSuccess();
-                            break;
-
+                        }
                     }
-                } else {
-                    iImport.onImportSuccess();
-                }
-            }
 
-            @Override
-            public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
-                iImport.onImportFailure(ContentImportStatus.IMPORT_FAILED);
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
+                        iImport.onImportFailure(ContentImportStatus.IMPORT_FAILED);
+                    }
+                });
     }
 
     public static boolean isValidExtension(String filePath) {
@@ -221,12 +227,11 @@ public final class ImportExportUtil {
 
         String fileExtension = getFileExtension(filePath);
 
-        return (fileExtension.equalsIgnoreCase(EXTENSION_CONTENT) ||
-                fileExtension.equalsIgnoreCase(EXTENSION_TELEMETRY) ||
-                fileExtension.equalsIgnoreCase(EXTENSION_PROFILE));
+        return (fileExtension.equalsIgnoreCase(EXTENSION_CONTENT) || fileExtension.equalsIgnoreCase(EXTENSION_TELEMETRY)
+                || fileExtension.equalsIgnoreCase(EXTENSION_PROFILE));
     }
 
-    public  static String getFileExtension(String filePath) {
+    public static String getFileExtension(String filePath) {
         if (filePath.lastIndexOf(".") != -1 && filePath.lastIndexOf(".") != 0) {
             return filePath.substring(filePath.lastIndexOf(".") + 1);
         } else {
