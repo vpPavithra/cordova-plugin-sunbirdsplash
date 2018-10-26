@@ -81,7 +81,8 @@ public class SplashScreen extends CordovaPlugin {
   private ArrayList<CallbackContext> mHandler = new ArrayList<>();
   private JSONObject mLastEvent;
   private String localeSelected;
-
+  private Intent deepLinkIntent;
+  
   private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
     return cordova.getActivity().getResources().getIdentifier(name, resourceType,
       cordova.getActivity().getApplicationInfo().packageName);
@@ -575,7 +576,7 @@ public class SplashScreen extends CordovaPlugin {
   private void handleIntentForDeeplinking(Intent intent) {
     // get the locale set by user from the mobile
     localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
-
+    deepLinkIntent = intent;
     mDeepLinkNavigation.validateAndHandleDeepLink(intent, new DeepLinkNavigation.IValidateDeepLink() {
       @Override
       public void validLocalDeepLink() {
@@ -638,7 +639,18 @@ public class SplashScreen extends CordovaPlugin {
 
       @Override
       public void notAValidDeepLink() {
-        importEcarFile(intent);
+        Uri uri = intent.getData();
+
+        if (uri == null) {
+          importEcarFile(intent);
+        }
+        else if ((cordova.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
+          importEcarFile(intent);
+        } else {
+          importingInProgress=true;
+          displaySplashScreen();
+          cordova.requestPermission(SplashScreen.this, 100, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
       }
 
       @Override
@@ -646,6 +658,18 @@ public class SplashScreen extends CordovaPlugin {
         consumeEvents();
       }
     });
+  }
+
+
+  public void onRequestPermissionResult(int requestCode, String[] permissions,
+  int[] grantResults) throws JSONException {
+    if (requestCode == 100) {
+      importEcarFile(deepLinkIntent);
+      deepLinkIntent = null;
+    }
+    else {
+      importEcarFile(deepLinkIntent);
+      }
   }
 
   private void importEcarFile(Intent intent) {
