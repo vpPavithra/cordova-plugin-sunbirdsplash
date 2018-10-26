@@ -1,5 +1,6 @@
 package org.sunbird;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -82,7 +83,7 @@ public class SplashScreen extends CordovaPlugin {
   private JSONObject mLastEvent;
   private String localeSelected;
   private Intent deepLinkIntent;
-  
+
   private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
     return cordova.getActivity().getResources().getIdentifier(name, resourceType,
       cordova.getActivity().getApplicationInfo().packageName);
