@@ -51,6 +51,7 @@
             </intent-filter>
 
             <!--Deep link for ecar files-->
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -73,6 +74,31 @@
                     android:mimeType="application/ecar"
                     android:scheme="content" />
             </intent-filter>
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:mimeType="application/octet-stream"
+                    android:scheme="content"
+                    android:pathPattern=".*\\.ecar"
+                    android:host="*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:mimeType="*/*"
+                    android:scheme="content"
+                    android:host="*" />
+            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -91,6 +117,7 @@
                 <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
                 <data android:pathPattern="/*.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.ecar" />
                 <data android:host="*" />
+                <data android:mimeType="application/ecar" />
             </intent-filter>
 
             <intent-filter>
