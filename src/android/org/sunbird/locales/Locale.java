@@ -16,6 +16,7 @@ public interface Locale {
         String NOT_COMPATIBLE = "Import failed. Lesson not supported.";
         String CONTENT_EXPIRED = "Import failed. Lesson expired";
         String ALREADY_EXIST = "The file is already imported. Please select a new file";
+        String IMPORT_ECAR = "Incompatible file format. You can only import .ecar , .epar and .gsa files";
     }
 
     interface Hi {
@@ -26,6 +27,7 @@ public interface Locale {
         String NOT_COMPATIBLE = "Import failed. Lesson not supported.";
         String CONTENT_EXPIRED = "Import failed. Lesson expired";
         String ALREADY_EXIST = "The file is already imported. Please select a new file";
+        String IMPORT_ECAR = "Incompatible file format. You can only import .ecar , .epar and .gsa files";
     }
 
     interface Mr {
@@ -36,6 +38,7 @@ public interface Locale {
         String NOT_COMPATIBLE = "Import failed. Lesson not supported.";
         String CONTENT_EXPIRED = "Import failed. Lesson expired";
         String ALREADY_EXIST = "The file is already imported. Please select a new file";
+        String IMPORT_ECAR = "Incompatible file format. You can only import .ecar , .epar and .gsa files";
     }
 
     interface Ta {
@@ -46,6 +49,7 @@ public interface Locale {
         String NOT_COMPATIBLE = "Import failed. Lesson not supported.";
         String CONTENT_EXPIRED = "Import failed. Lesson expired";
         String ALREADY_EXIST = "The file is already imported. Please select a new file";
+        String IMPORT_ECAR = "Incompatible file format. You can only import .ecar , .epar and .gsa files";
     }
 
     interface Te {
@@ -56,5 +60,6 @@ public interface Locale {
         String NOT_COMPATIBLE = "Import failed. Lesson not supported.";
         String CONTENT_EXPIRED = "Import failed. Lesson expired";
         String ALREADY_EXIST = "The file is already imported. Please select a new file";
+        String IMPORT_ECAR = "Incompatible file format. You can only import .ecar , .epar and .gsa files";
     }
 }

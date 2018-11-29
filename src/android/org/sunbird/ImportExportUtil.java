@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
@@ -19,6 +21,8 @@ import org.ekstep.genieservices.commons.bean.TelemetryImportRequest;
 import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.StringUtil;
+import org.sunbird.SplashScreen;
+import org.sunbird.locales.Locale;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +34,8 @@ public final class ImportExportUtil {
     private static final String EXTENSION_CONTENT = "ecar";
     private static final String EXTENSION_PROFILE = "epar";
     private static final String EXTENSION_TELEMETRY = "gsa";
+
+    private static String localeSelected;
 
     /**
      * Initiate the import file if Genie supported the file for side loading.
@@ -56,11 +62,31 @@ public final class ImportExportUtil {
 
     }
 
+    private static String getRelevantMessage(String localeSelected) {
+        String message = null;
+        if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+            message = Locale.Hi.IMPORT_ECAR;
+          } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+            message = Locale.Mr.IMPORT_ECAR;
+          } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+            message = Locale.Te.IMPORT_ECAR;
+          } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+            message = Locale.Ta.IMPORT_ECAR;
+          } else {
+            message = Locale.En.IMPORT_ECAR;
+          }
+         return message;
+
+        }
+
     private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
             final boolean isAttachment, boolean showProgressDialog) {
         String extension = getFileExtension(filePath);
+        localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
 
         if (!isValidExtension(filePath)) {
+            String message = getRelevantMessage(localeSelected);
+            Toast.makeText( activity, message, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -125,8 +151,7 @@ public final class ImportExportUtil {
                             delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
                         }
                     });
-        }
-
+        } 
         return true;
     }
 
