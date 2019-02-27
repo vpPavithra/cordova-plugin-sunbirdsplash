@@ -66,18 +66,18 @@ public final class ImportExportUtil {
         String message = null;
         if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
             message = Locale.Hi.IMPORT_ECAR;
-          } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+        } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
             message = Locale.Mr.IMPORT_ECAR;
-          } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+        } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
             message = Locale.Te.IMPORT_ECAR;
-          } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+        } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
             message = Locale.Ta.IMPORT_ECAR;
-          } else {
+        } else {
             message = Locale.En.IMPORT_ECAR;
-          }
-         return message;
-
         }
+        return message;
+
+    }
 
     private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
             final boolean isAttachment, boolean showProgressDialog) {
@@ -86,7 +86,7 @@ public final class ImportExportUtil {
 
         if (!isValidExtension(filePath)) {
             String message = getRelevantMessage(localeSelected);
-            Toast.makeText( activity, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -151,7 +151,7 @@ public final class ImportExportUtil {
                             delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
                         }
                     });
-        } 
+        }
         return true;
     }
 
@@ -205,11 +205,24 @@ public final class ImportExportUtil {
         return fullPath;
     }
 
+    private static File getExternalFilesDir(Activity activity) {
+        File externalFilesDir = activity.getExternalFilesDir(null);
+        if (externalFilesDir == null) {
+            throw new RuntimeException("External file could not be loaded.");
+        }
+        return externalFilesDir;
+    }
+
     private static void importContent(Activity activity, String filePath, IImport iImport) {
         EcarImportRequest.Builder builder = new EcarImportRequest.Builder();
         builder.fromFilePath(filePath);
 
-        builder.toFolder("/storage/emulated/0/Android/data/org.sunbird.app/files");
+        try {
+            builder.toFolder(getExternalFilesDir(activity).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         GenieService.getAsyncService().getContentService().importEcar(builder.build(),
                 new IResponseHandler<List<ContentImportResponse>>() {
                     @Override
