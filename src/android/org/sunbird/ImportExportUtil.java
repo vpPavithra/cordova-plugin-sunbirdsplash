@@ -81,7 +81,6 @@ public final class ImportExportUtil {
 
     private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
             final boolean isAttachment, boolean showProgressDialog) {
-        String extension = getFileExtension(filePath);
         localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
 
         if (!isValidExtension(filePath)) {
@@ -89,6 +88,8 @@ public final class ImportExportUtil {
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        String extension = getFileExtension(filePath);
 
         if (extension.equalsIgnoreCase("ecar")) {
             importContent(activity, filePath, new ImportExportUtil.IImport() {
@@ -285,3 +286,4 @@ public final class ImportExportUtil {
         void onOutDatedEcarFound();
     }
 }
+
