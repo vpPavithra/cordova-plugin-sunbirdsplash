@@ -10,17 +10,7 @@ import android.provider.MediaStore;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.ekstep.genieservices.GenieService;
-import org.ekstep.genieservices.commons.IResponseHandler;
-import org.ekstep.genieservices.commons.bean.ContentImportResponse;
-import org.ekstep.genieservices.commons.bean.EcarImportRequest;
-import org.ekstep.genieservices.commons.bean.GenieResponse;
-import org.ekstep.genieservices.commons.bean.ProfileImportRequest;
-import org.ekstep.genieservices.commons.bean.ProfileImportResponse;
-import org.ekstep.genieservices.commons.bean.TelemetryImportRequest;
-import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
-import org.ekstep.genieservices.commons.utils.CollectionUtil;
-import org.ekstep.genieservices.commons.utils.StringUtil;
+
 import org.sunbird.SplashScreen;
 import org.sunbird.locales.Locale;
 
@@ -43,24 +33,24 @@ public final class ImportExportUtil {
      * @param intent
      * @return
      */
-    public static boolean initiateImportFile(Activity activity, IImport callback, Intent intent,
-            boolean showProgressDialog) {
-        Uri uri = intent.getData();
-
-        if (uri == null) {
-            return false;
-        }
-
-        if (intent.getScheme().equals("content")) {
-            return importGenieSupportedFile(activity, callback,
-                    getAttachmentFilePath(activity.getApplicationContext(), uri), true, showProgressDialog);
-        } else if (intent.getScheme().equals("file")) {
-            return importGenieSupportedFile(activity, callback, uri.getPath(), false, showProgressDialog);
-        } else {
-            return false;
-        }
-
-    }
+//    public static boolean initiateImportFile(Activity activity, IImport callback, Intent intent,
+//            boolean showProgressDialog) {
+//        Uri uri = intent.getData();
+//
+//        if (uri == null) {
+//            return false;
+//        }
+//
+//        if (intent.getScheme().equals("content")) {
+//            return importGenieSupportedFile(activity, callback,
+//                    getAttachmentFilePath(activity.getApplicationContext(), uri), true, showProgressDialog);
+//        } else if (intent.getScheme().equals("file")) {
+//            return importGenieSupportedFile(activity, callback, uri.getPath(), false, showProgressDialog);
+//        } else {
+//            return false;
+//        }
+//
+//    }
 
     private static String getRelevantMessage(String localeSelected) {
         String message = null;
@@ -79,82 +69,82 @@ public final class ImportExportUtil {
 
     }
 
-    private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
-            final boolean isAttachment, boolean showProgressDialog) {
-        localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
-
-        if (!isValidExtension(filePath)) {
-            String message = getRelevantMessage(localeSelected);
-            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        String extension = getFileExtension(filePath);
-
-        if (extension.equalsIgnoreCase("ecar")) {
-            importContent(activity, filePath, new ImportExportUtil.IImport() {
-                @Override
-                public void onImportSuccess() {
-
-                    if (isAttachment) {
-                        File file = new File(filePath);
-                        file.delete();
-                    }
-
-                    delegate.onImportSuccess();
-
-                }
-
-                @Override
-                public void onImportFailure(ContentImportStatus status) {
-                    delegate.onImportFailure(status);
-                }
-
-                @Override
-                public void onOutDatedEcarFound() {
-                    delegate.onOutDatedEcarFound();
-                }
-            });
-        } else if (extension.equalsIgnoreCase("gsa")) {
-            TelemetryImportRequest request = new TelemetryImportRequest.Builder().fromFilePath(filePath).build();
-            GenieService.getAsyncService().getTelemetryService().importTelemetry(request, new IResponseHandler<Void>() {
-                @Override
-                public void onSuccess(GenieResponse<Void> genieResponse) {
-                    if (isAttachment) {
-                        File file = new File(filePath);
-                        file.delete();
-                    }
-
-                    delegate.onImportSuccess();
-                }
-
-                @Override
-                public void onError(GenieResponse<Void> genieResponse) {
-                    delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
-                }
-            });
-        } else if (extension.equalsIgnoreCase("epar")) {
-            ProfileImportRequest request = new ProfileImportRequest.Builder().fromFilePath(filePath).build();
-            GenieService.getAsyncService().getUserService().importProfile(request,
-                    new IResponseHandler<ProfileImportResponse>() {
-                        @Override
-                        public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
-                            if (isAttachment) {
-                                File file = new File(filePath);
-                                file.delete();
-                            }
-
-                            delegate.onImportSuccess();
-                        }
-
-                        @Override
-                        public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
-                            delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
-                        }
-                    });
-        }
-        return true;
-    }
+//    private static boolean importGenieSupportedFile(Activity activity, final IImport delegate, final String filePath,
+//            final boolean isAttachment, boolean showProgressDialog) {
+////        localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
+//
+//        if (!isValidExtension(filePath)) {
+//            String message = getRelevantMessage(localeSelected);
+//            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        String extension = getFileExtension(filePath);
+//
+//        if (extension.equalsIgnoreCase("ecar")) {
+//            importContent(activity, filePath, new ImportExportUtil.IImport() {
+//                @Override
+//                public void onImportSuccess() {
+//
+//                    if (isAttachment) {
+//                        File file = new File(filePath);
+//                        file.delete();
+//                    }
+//
+//                    delegate.onImportSuccess();
+//
+//                }
+//
+//                @Override
+//                public void onImportFailure(ContentImportStatus status) {
+//                    delegate.onImportFailure(status);
+//                }
+//
+//                @Override
+//                public void onOutDatedEcarFound() {
+//                    delegate.onOutDatedEcarFound();
+//                }
+//            });
+//        } else if (extension.equalsIgnoreCase("gsa")) {
+//            TelemetryImportRequest request = new TelemetryImportRequest.Builder().fromFilePath(filePath).build();
+//            GenieService.getAsyncService().getTelemetryService().importTelemetry(request, new IResponseHandler<Void>() {
+//                @Override
+//                public void onSuccess(GenieResponse<Void> genieResponse) {
+//                    if (isAttachment) {
+//                        File file = new File(filePath);
+//                        file.delete();
+//                    }
+//
+//                    delegate.onImportSuccess();
+//                }
+//
+//                @Override
+//                public void onError(GenieResponse<Void> genieResponse) {
+//                    delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+//                }
+//            });
+//        } else if (extension.equalsIgnoreCase("epar")) {
+//            ProfileImportRequest request = new ProfileImportRequest.Builder().fromFilePath(filePath).build();
+//            GenieService.getAsyncService().getUserService().importProfile(request,
+//                    new IResponseHandler<ProfileImportResponse>() {
+//                        @Override
+//                        public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
+//                            if (isAttachment) {
+//                                File file = new File(filePath);
+//                                file.delete();
+//                            }
+//
+//                            delegate.onImportSuccess();
+//                        }
+//
+//                        @Override
+//                        public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
+//                            delegate.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+//                        }
+//                    });
+//        }
+//        return true;
+//    }
 
     private static String getAttachmentFilePath(Context context, Uri uri) {
 
@@ -214,53 +204,53 @@ public final class ImportExportUtil {
         return externalFilesDir;
     }
 
-    private static void importContent(Activity activity, String filePath, IImport iImport) {
-        EcarImportRequest.Builder builder = new EcarImportRequest.Builder();
-        builder.fromFilePath(filePath);
-
-        try {
-            builder.toFolder(getExternalFilesDir(activity).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        GenieService.getAsyncService().getContentService().importEcar(builder.build(),
-                new IResponseHandler<List<ContentImportResponse>>() {
-                    @Override
-                    public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
-
-                        List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
-                        if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
-                            ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
-                            switch (importStatus) {
-                            case NOT_COMPATIBLE:
-                                iImport.onImportFailure(ContentImportStatus.NOT_COMPATIBLE);
-                                break;
-                            case CONTENT_EXPIRED:
-                                iImport.onImportFailure(ContentImportStatus.CONTENT_EXPIRED);
-                                break;
-                            case ALREADY_EXIST:
-                                iImport.onImportFailure(ContentImportStatus.ALREADY_EXIST);
-                                break;
-                            default:
-                                iImport.onImportSuccess();
-                                break;
-
-                            }
-                        } else {
-                            iImport.onImportSuccess();
-                        }
-                    }
-
-                    @Override
-                    public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
-                        iImport.onImportFailure(ContentImportStatus.IMPORT_FAILED);
-                    }
-                });
-    }
+//    private static void importContent(Activity activity, String filePath, IImport iImport) {
+//        EcarImportRequest.Builder builder = new EcarImportRequest.Builder();
+//        builder.fromFilePath(filePath);
+//
+//        try {
+//            builder.toFolder(getExternalFilesDir(activity).toString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        GenieService.getAsyncService().getContentService().importEcar(builder.build(),
+//                new IResponseHandler<List<ContentImportResponse>>() {
+//                    @Override
+//                    public void onSuccess(GenieResponse<List<ContentImportResponse>> genieResponse) {
+//
+//                        List<ContentImportResponse> contentImportResponseList = genieResponse.getResult();
+//                        if (!CollectionUtil.isNullOrEmpty(contentImportResponseList)) {
+//                            ContentImportStatus importStatus = contentImportResponseList.get(0).getStatus();
+//                            switch (importStatus) {
+//                            case NOT_COMPATIBLE:
+//                                iImport.onImportFailure(ContentImportStatus.NOT_COMPATIBLE);
+//                                break;
+//                            case CONTENT_EXPIRED:
+//                                iImport.onImportFailure(ContentImportStatus.CONTENT_EXPIRED);
+//                                break;
+//                            case ALREADY_EXIST:
+//                                iImport.onImportFailure(ContentImportStatus.ALREADY_EXIST);
+//                                break;
+//                            default:
+//                                iImport.onImportSuccess();
+//                                break;
+//
+//                            }
+//                        } else {
+//                            iImport.onImportSuccess();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(GenieResponse<List<ContentImportResponse>> genieResponse) {
+//                        iImport.onImportFailure(ContentImportStatus.IMPORT_FAILED);
+//                    }
+//                });
+//    }
 
     public static boolean isValidExtension(String filePath) {
-        if (StringUtil.isNullOrEmpty(filePath)) {
+        if (filePath == null && filePath.isEmpty()) {
             return false;
         }
 
@@ -278,12 +268,12 @@ public final class ImportExportUtil {
         }
     }
 
-    public interface IImport {
-        void onImportSuccess();
-
-        void onImportFailure(ContentImportStatus status);
-
-        void onOutDatedEcarFound();
-    }
+//    public interface IImport {
+//        void onImportSuccess();
+//
+//        void onImportFailure(ContentImportStatus status);
+//
+//        void onOutDatedEcarFound();
+//    }
 }
 

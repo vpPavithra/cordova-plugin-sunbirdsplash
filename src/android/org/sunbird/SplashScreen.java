@@ -29,19 +29,6 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
-import org.ekstep.genieservices.GenieService;
-import org.ekstep.genieservices.async.GenieAsyncService;
-import org.ekstep.genieservices.commons.IResponseHandler;
-import org.ekstep.genieservices.commons.bean.Content;
-import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
-import org.ekstep.genieservices.commons.bean.GenieResponse;
-import org.ekstep.genieservices.commons.bean.ImportContentProgress;
-import org.ekstep.genieservices.commons.bean.enums.ContentImportStatus;
-import org.ekstep.genieservices.commons.bean.telemetry.Impression;
-import org.ekstep.genieservices.commons.utils.GsonUtil;
-import org.ekstep.genieservices.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,18 +76,18 @@ public class SplashScreen extends CordovaPlugin {
       cordova.getActivity().getApplicationInfo().packageName);
   }
 
-  @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-  public void onContentImport(ImportContentProgress importContentProgress) throws InterruptedException {
-
-    // get the locale set by user from the mobile
-    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
-
-    String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
-
-    msg = msg + " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ")";
-
-    importStatusTextView.setText(msg);
-  }
+//  @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+//  public void onContentImport(ImportContentProgress importContentProgress) throws InterruptedException {
+//
+//    // get the locale set by user from the mobile
+//    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
+//
+//    String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
+//
+//    msg = msg + " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ")";
+//
+//    importStatusTextView.setText(msg);
+//  }
 
   private String getRelevantMessage(String localeSelected, int type) {
     String message = null;
@@ -254,9 +241,9 @@ public class SplashScreen extends CordovaPlugin {
   @Override
   public void onStart() {
     super.onStart();
-    if (!EventBus.isSubscriberRegistered(this)) {
-      EventBus.registerSubscriber(this);
-    }
+//    if (!EventBus.isSubscriberRegistered(this)) {
+//      EventBus.registerSubscriber(this);
+//    }
   }
 
   @Override
@@ -267,7 +254,7 @@ public class SplashScreen extends CordovaPlugin {
   @Override
   public void onStop() {
     super.onStop();
-    EventBus.unregisterSubscriber(this);
+//    EventBus.unregisterSubscriber(this);
   }
 
   @Override
@@ -374,47 +361,47 @@ public class SplashScreen extends CordovaPlugin {
   }
 
   private void generateTelemetry() {
-    Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
+//    Impression impression = new Impression.Builder().type("view").pageId("splash").environment("home").build();
     boolean isFirstTime = sharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
     if (isFirstTime) {
       sharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
     }
-    org.ekstep.genieservices.commons.bean.telemetry.Log log = new org.ekstep.genieservices.commons.bean.telemetry.Log.Builder()
-      .environment("home")
-      .type("view")
-      .level(org.ekstep.genieservices.commons.bean.telemetry.Log.Level.INFO)
-      .message("splash")
-      .addParam("isFirstTime", isFirstTime)
-      .build();
+//    org.ekstep.genieservices.commons.bean.telemetry.Log log = new org.ekstep.genieservices.commons.bean.telemetry.Log.Builder()
+//      .environment("home")
+//      .type("view")
+//      .level(org.ekstep.genieservices.commons.bean.telemetry.Log.Level.INFO)
+//      .message("splash")
+//      .addParam("isFirstTime", isFirstTime)
+//      .build();
+//
+//    GenieAsyncService genieAsyncService = GenieService.getAsyncService();
+//
+//    if (genieAsyncService != null && genieAsyncService.getTelemetryService() != null) {
+//
+//      IResponseHandler<Void> iResponseHandler = new IResponseHandler<Void>() {
+//        @Override
+//        public void onSuccess(GenieResponse<Void> genieResponse) {
+//
+//        }
+//
+//        @Override
+//        public void onError(GenieResponse<Void> genieResponse) {
+//
+//        }
+//      };
+//      genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
+//        @Override
+//        public void onSuccess(GenieResponse<Void> genieResponse) {
+//          genieAsyncService.getTelemetryService().saveTelemetry(log, iResponseHandler);
+//        }
+//
+//        @Override
+//        public void onError(GenieResponse<Void> genieResponse) {
+//
+//        }
+//      });
 
-    GenieAsyncService genieAsyncService = GenieService.getAsyncService();
-
-    if (genieAsyncService != null && genieAsyncService.getTelemetryService() != null) {
-
-      IResponseHandler<Void> iResponseHandler = new IResponseHandler<Void>() {
-        @Override
-        public void onSuccess(GenieResponse<Void> genieResponse) {
-
-        }
-
-        @Override
-        public void onError(GenieResponse<Void> genieResponse) {
-
-        }
-      };
-      genieAsyncService.getTelemetryService().saveTelemetry(impression, new IResponseHandler<Void>() {
-        @Override
-        public void onSuccess(GenieResponse<Void> genieResponse) {
-          genieAsyncService.getTelemetryService().saveTelemetry(log, iResponseHandler);
-        }
-
-        @Override
-        public void onError(GenieResponse<Void> genieResponse) {
-
-        }
-      });
-
-    }
+//    }
   }
 
   /**
@@ -576,7 +563,7 @@ public class SplashScreen extends CordovaPlugin {
 
   private void handleIntentForDeeplinking(Intent intent) {
     // get the locale set by user from the mobile
-    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
+//    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
     deepLinkIntent = intent;
     mDeepLinkNavigation.validateAndHandleDeepLink(intent, new DeepLinkNavigation.IValidateDeepLink() {
       @Override
@@ -674,79 +661,79 @@ public class SplashScreen extends CordovaPlugin {
   }
 
   private void importEcarFile(Intent intent) {
-    boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
-      @Override
-      public void onImportSuccess() {
-        String message = getRelevantMessage(localeSelected, IMPORT_SUCCESS);
-        importStatusTextView.setText(message);
-        importingInProgress = false;
-
-        Toast.makeText(cordova.getActivity(), message, Toast.LENGTH_SHORT).show();
-        hide();
-      }
-
-      @Override
-      public void onImportFailure(ContentImportStatus status) {
-        String statusText = null;
-        switch (status) {
-          case NOT_COMPATIBLE:
-            statusText = getRelevantMessage(localeSelected, NOT_COMPATIBLE);
-            break;
-          case CONTENT_EXPIRED:
-            statusText = getRelevantMessage(localeSelected, CONTENT_EXPIRED);
-            break;
-          case ALREADY_EXIST:
-            statusText = getRelevantMessage(localeSelected, ALREADY_EXIST);
-            break;
-          default:
-            statusText = getRelevantMessage(localeSelected, IMPORT_ERROR);
-            break;
-        }
-
-        importStatusTextView.setText(statusText);
-        importingInProgress = false;
-        Toast.makeText(cordova.getActivity(), statusText, Toast.LENGTH_SHORT).show();
-        hide();
-      }
-
-      @Override
-      public void onOutDatedEcarFound() {
-        importingInProgress = false;
-        hide();
-      }
-    }, intent, true);
-
-    if (isImport) {
-      displaySplashScreen();
-      importingInProgress = true;
-
-      String message = getRelevantMessage(localeSelected, IMPORT_PROGRESS);
-      importStatusTextView.setText(message);
-    }
+//    boolean isImport = ImportExportUtil.initiateImportFile(cordova.getActivity(), new ImportExportUtil.IImport() {
+//      @Override
+//      public void onImportSuccess() {
+//        String message = getRelevantMessage(localeSelected, IMPORT_SUCCESS);
+//        importStatusTextView.setText(message);
+//        importingInProgress = false;
+//
+//        Toast.makeText(cordova.getActivity(), message, Toast.LENGTH_SHORT).show();
+//        hide();
+//      }
+//
+//      @Override
+//      public void onImportFailure(ContentImportStatus status) {
+//        String statusText = null;
+//        switch (status) {
+//          case NOT_COMPATIBLE:
+//            statusText = getRelevantMessage(localeSelected, NOT_COMPATIBLE);
+//            break;
+//          case CONTENT_EXPIRED:
+//            statusText = getRelevantMessage(localeSelected, CONTENT_EXPIRED);
+//            break;
+//          case ALREADY_EXIST:
+//            statusText = getRelevantMessage(localeSelected, ALREADY_EXIST);
+//            break;
+//          default:
+//            statusText = getRelevantMessage(localeSelected, IMPORT_ERROR);
+//            break;
+//        }
+//
+//        importStatusTextView.setText(statusText);
+//        importingInProgress = false;
+//        Toast.makeText(cordova.getActivity(), statusText, Toast.LENGTH_SHORT).show();
+//        hide();
+//      }
+//
+//      @Override
+//      public void onOutDatedEcarFound() {
+//        importingInProgress = false;
+//        hide();
+//      }
+//    }, intent, true);
+//
+//    if (isImport) {
+//      displaySplashScreen();
+//      importingInProgress = true;
+//
+//      String message = getRelevantMessage(localeSelected, IMPORT_PROGRESS);
+//      importStatusTextView.setText(message);
+//    }
   }
 
   private void launchContentDetails(String url) {
     String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
 
-    ContentDetailsRequest request = new ContentDetailsRequest.Builder().forContent(identifier).build();
-
-    GenieService.getAsyncService().getContentService().getContentDetails(request, new IResponseHandler<Content>() {
-      @Override
-      public void onSuccess(GenieResponse<Content> genieResponse) {
-        String response = GsonUtil.toJson(genieResponse);
-        try {
-          mLastEvent = new JSONObject(response);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-        consumeEvents();
-      }
-
-      @Override
-      public void onError(GenieResponse<Content> genieResponse) {
-        consumeEvents();
-      }
-    });
+//    ContentDetailsRequest request = new ContentDetailsRequest.Builder().forContent(identifier).build();
+//
+//    GenieService.getAsyncService().getContentService().getContentDetails(request, new IResponseHandler<Content>() {
+//      @Override
+//      public void onSuccess(GenieResponse<Content> genieResponse) {
+//        String response = GsonUtil.toJson(genieResponse);
+//        try {
+//          mLastEvent = new JSONObject(response);
+//        } catch (JSONException e) {
+//          e.printStackTrace();
+//        }
+//        consumeEvents();
+//      }
+//
+//      @Override
+//      public void onError(GenieResponse<Content> genieResponse) {
+//        consumeEvents();
+//      }
+//    });
   }
 
 }
