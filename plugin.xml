@@ -8,8 +8,6 @@
     <license>MIT</license>
     <keywords></keywords>
 
-    <dependency id="cordova-plugin-genie-sdk" url="https://github.com/project-sunbird/cordova-plugin-genie-sdk.git"/>
-
     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
 
     <js-module src="www/plugin.js" name="plugin">
