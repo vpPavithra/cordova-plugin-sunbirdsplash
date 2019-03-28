@@ -23,7 +23,10 @@ var splash = {
   },
   getActions: function(successCallback) {
     exec(successCallback, null, PLUGIN_NAME, "getActions", []);
-  }
+  },
+  markImportDone: function(successCallback) {
+    exec(successCallback, null, PLUGIN_NAME, "markImportDone", []);
+  },
 };
 
 

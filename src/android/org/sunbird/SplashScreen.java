@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sunbird.deeplinks.DeepLinkNavigation;
 import org.sunbird.locales.Locale;
+import org.sunbird.util.Action;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
@@ -78,19 +79,6 @@ public class SplashScreen extends CordovaPlugin {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
                 cordova.getActivity().getApplicationInfo().packageName);
     }
-
-//  @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-//  public void onContentImport(ImportContentProgress importContentProgress) throws InterruptedException {
-//
-//    // get the locale set by user from the mobile
-//    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
-//
-//    String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
-//
-//    msg = msg + " (" + importContentProgress.getCurrentCount() + "/" + importContentProgress.getTotalCount() + ")";
-//
-//    importStatusTextView.setText(msg);
-//  }
 
     private String getRelevantMessage(String localeSelected, int type) {
         String message = null;
@@ -294,8 +282,13 @@ public class SplashScreen extends CordovaPlugin {
             int totalCount = args.getInt(1);
             setImportProgress(currentCount, totalCount);
         }else if (action.equals("getActions")) {
+            importingInProgress = true;
             callbackContext.success(actions.toString());
             actions = new JSONArray();
+        }else if (action.equals("markImportDone")) {
+            importingInProgress = false;
+            hide();
+            callbackContext.success();
         } else {
             return false;
         }
@@ -636,6 +629,7 @@ public class SplashScreen extends CordovaPlugin {
                 } else if ((cordova.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
                     addImportAction(intent);
                 } else {
+                    importingInProgress = true;
                     displaySplashScreen();
                     cordova.requestPermission(SplashScreen.this, 100, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
