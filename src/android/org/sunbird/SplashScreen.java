@@ -33,7 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sunbird.deeplinks.DeepLinkNavigation;
 import org.sunbird.locales.Locale;
-import org.sunbird.util.Action;
+//import org.sunbird.util.Action;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
@@ -287,7 +287,7 @@ public class SplashScreen extends CordovaPlugin {
             actions = new JSONArray();
         }else if (action.equals("markImportDone")) {
             importingInProgress = false;
-            hide();
+            hideSplashScreen(false);
             callbackContext.success();
         } else {
             return false;
@@ -579,7 +579,6 @@ public class SplashScreen extends CordovaPlugin {
                     }
 
                     mLastEvent = response;
-                    consumeEvents();
                 } catch (JSONException ex) {
                     Log.e("SplashScreen", ex.toString());
                 }
@@ -633,6 +632,8 @@ public class SplashScreen extends CordovaPlugin {
                     displaySplashScreen();
                     cordova.requestPermission(SplashScreen.this, 100, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
+
+                consumeEvents();
             }
 
             @Override
