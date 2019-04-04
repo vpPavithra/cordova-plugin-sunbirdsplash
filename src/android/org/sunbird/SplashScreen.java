@@ -236,7 +236,7 @@ public class SplashScreen extends CordovaPlugin {
 
     @Override
     public void onPause(boolean multitasking) {
-        this.hideSplashScreen(true);
+       
     }
 
     @Override
