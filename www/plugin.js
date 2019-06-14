@@ -17,7 +17,16 @@ var splash = {
   },
   clearPrefs: function(successCallback) {
     exec(successCallback, null, PLUGIN_NAME, "clearPrefs", []);
-  }
+  },
+  setImportProgress: function(currentCount, totalCount) {
+    exec(null, null, PLUGIN_NAME, "setImportProgress", [currentCount, totalCount]);
+  },
+  getActions: function(successCallback) {
+    exec(successCallback, null, PLUGIN_NAME, "getActions", []);
+  },
+  markImportDone: function(successCallback) {
+    exec(successCallback, null, PLUGIN_NAME, "markImportDone", []);
+  },
 };
 
 
