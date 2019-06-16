@@ -596,24 +596,14 @@ public class SplashScreen extends CordovaPlugin {
                 String[] pair = newString.split("/");
 
                 if (pair[1].equalsIgnoreCase("public")) {
-                    addDeepLinkAction(url);
+                    addDeepLinkAction(url, "content");
                 } else if (pair[1].equalsIgnoreCase("dial")) {
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("type", "dialcode");
-                        jsonObject.put("code", url);
-
-                        mLastEvent = jsonObject;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    consumeEvents();
+                    addDeepLinkAction(url, "dial");
                 } else if (pair[1].equalsIgnoreCase("play")
                         && (pair[2].equalsIgnoreCase("collection") || pair[2].equalsIgnoreCase("content"))) {
-                    addDeepLinkAction(url);
-                } else if (pair[1].equalsIgnoreCase("learn") && pair[2].equalsIgnoreCase("course")) {
-                    addDeepLinkAction(url);
+                    addDeepLinkAction(url, "content");
+                } else if ((pair[1].equalsIgnoreCase("learn") || pair[1].equalsIgnoreCase("explore-course")) && pair[2].equalsIgnoreCase("course")) {
+                    addDeepLinkAction(url, "content");
                 }
 
             }
@@ -672,13 +662,13 @@ public class SplashScreen extends CordovaPlugin {
 
     }
 
-    private void addDeepLinkAction(String url){
+    private void addDeepLinkAction(String url, String type){
         try{
             String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
             if(identifier!= null && !identifier.isEmpty()){
                 JSONObject deeplinkPayload =new JSONObject();
                 deeplinkPayload.put("identifier", identifier);
-
+                deeplinkPayload.put("type", type);
 
                 JSONObject deeplinkAction =new JSONObject();
                 deeplinkAction.put("type","DEEPLINK");
