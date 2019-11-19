@@ -46,6 +46,7 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn/course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course/course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn/course" android:scheme="http" />
+                <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="http" />
 
             </intent-filter>
 
