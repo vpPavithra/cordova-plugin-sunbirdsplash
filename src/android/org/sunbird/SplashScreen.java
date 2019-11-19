@@ -597,7 +597,7 @@ public class SplashScreen extends CordovaPlugin {
 
                 if (pair[1].equalsIgnoreCase("public")) {
                     addDeepLinkAction(url, "content");
-                } else if (pair[1].equalsIgnoreCase("dial")) {
+                } else if (pair[1].equalsIgnoreCase("dial") || pair[1].equalsIgnoreCase("QR")) {
                     addDeepLinkAction(url, "dial");
                 } else if (pair[1].equalsIgnoreCase("play")
                         && (pair[2].equalsIgnoreCase("collection") || pair[2].equalsIgnoreCase("content"))) {
