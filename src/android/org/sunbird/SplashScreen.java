@@ -65,7 +65,8 @@ public class SplashScreen extends CordovaPlugin {
     private ImageView splashImageView;
     private TextView importStatusTextView;
     private int orientation;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences splashSharedPreferences;
+    private SharedPreferences appSharedPreferences;
     private volatile boolean importingInProgress;
     private DeepLinkNavigation mDeepLinkNavigation;
     private ArrayList<CallbackContext> mHandler = new ArrayList<>();
@@ -208,7 +209,8 @@ public class SplashScreen extends CordovaPlugin {
 
     @Override
     protected void pluginInitialize() {
-        sharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
+        splashSharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
+        appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file", Context.MODE_PRIVATE);
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -272,8 +274,8 @@ public class SplashScreen extends CordovaPlugin {
             mHandler.add(callbackContext);
             consumeEvents();
         } else if (action.equals("clearPrefs")) {
-            if (sharedPreferences != null) {
-                sharedPreferences.edit().clear().apply();
+            if (splashSharedPreferences != null) {
+                splashSharedPreferences.edit().clear().apply();
                 callbackContext.success();
             }
         } else if (action.equals("setImportProgress")) {
@@ -296,17 +298,19 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void setImportProgress(int currentCount, int totalCount) {
-        // TODO get the locale set by user from the mobile
-        //    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
-
-        String msg = getRelevantMessage("en", IMPORTING_COUNT);
-        msg = msg + " (" + currentCount + "/" + totalCount + ")";
-        importStatusTextView.setText(msg);
+        localeSelected = appSharedPreferences.getString("sunbirdselected_language_code", "en");
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
+                msg = msg + " (" + currentCount + "/" + totalCount + ")";
+                importStatusTextView.setText(msg);
+            }
+        });
     }
 
     private void cacheImageAndAppName(String appName, String logoUrl) {
         int dim = getSplashDim(cordova.getActivity().getWindowManager().getDefaultDisplay());
-        sharedPreferences.edit().putString(KEY_NAME, appName).putString(KEY_LOGO, logoUrl).apply();
+        splashSharedPreferences.edit().putString(KEY_NAME, appName).putString(KEY_LOGO, logoUrl).apply();
         Glide.with(cordova.getActivity()).load(logoUrl).downloadOnly(dim, dim);
     }
 
@@ -377,9 +381,9 @@ public class SplashScreen extends CordovaPlugin {
         actions.put(impresionAction);
 
 
-        boolean isFirstTime = sharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
+        boolean isFirstTime = splashSharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
         if (isFirstTime) {
-            sharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
+            splashSharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
         }
 
         JSONObject interact = new JSONObject();
@@ -408,9 +412,9 @@ public class SplashScreen extends CordovaPlugin {
         final int splashscreenTime = DEFAULT_SPLASHSCREEN_DURATION;
         final int drawableId = getSplashId();
 
-        final String appName = sharedPreferences.getString(KEY_NAME,
+        final String appName = splashSharedPreferences.getString(KEY_NAME,
                 cordova.getActivity().getString(getIdOfResource(cordova, "_app_name", "string")));
-        final String logoUrl = sharedPreferences.getString(KEY_LOGO, "");
+        final String logoUrl = splashSharedPreferences.getString(KEY_LOGO, "");
 
         final int fadeSplashScreenDuration = getFadeDuration();
         final int effectiveSplashDuration = Math.max(0, splashscreenTime - fadeSplashScreenDuration);
