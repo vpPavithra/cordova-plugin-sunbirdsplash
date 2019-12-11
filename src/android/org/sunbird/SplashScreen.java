@@ -83,104 +83,103 @@ public class SplashScreen extends CordovaPlugin {
     private String getRelevantMessage(String localeSelected, int type) {
         String message = null;
         switch (type) {
-            case IMPORT_SUCCESS:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.IMPORT_SUCCESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.IMPORT_SUCCESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.IMPORT_SUCCESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.IMPORT_SUCCESS;
-                } else {
-                    message = Locale.En.IMPORT_SUCCESS;
-                }
-                break;
+        case IMPORT_SUCCESS:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_SUCCESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_SUCCESS;
+            } else {
+                message = Locale.En.IMPORT_SUCCESS;
+            }
+            break;
 
-            case IMPORT_ERROR:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.IMPORT_ERROR;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.IMPORT_ERROR;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.IMPORT_ERROR;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.IMPORT_ERROR;
-                } else {
-                    message = Locale.En.IMPORT_ERROR;
-                }
-                break;
+        case IMPORT_ERROR:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_ERROR;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_ERROR;
+            } else {
+                message = Locale.En.IMPORT_ERROR;
+            }
+            break;
 
-            case IMPORT_PROGRESS:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.IMPORT_PROGRESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.IMPORT_PROGRESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.IMPORT_PROGRESS;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.IMPORT_PROGRESS;
-                } else {
-                    message = Locale.En.IMPORT_PROGRESS;
-                }
-                break;
+        case IMPORT_PROGRESS:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORT_PROGRESS;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORT_PROGRESS;
+            } else {
+                message = Locale.En.IMPORT_PROGRESS;
+            }
+            break;
 
-            case IMPORTING_COUNT:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.IMPORTING_COUNT;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.IMPORTING_COUNT;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.IMPORTING_COUNT;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.IMPORTING_COUNT;
-                } else {
-                    message = Locale.En.IMPORTING_COUNT;
-                }
-                break;
+        case IMPORTING_COUNT:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.IMPORTING_COUNT;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.IMPORTING_COUNT;
+            } else {
+                message = Locale.En.IMPORTING_COUNT;
+            }
+            break;
 
-            case NOT_COMPATIBLE:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.NOT_COMPATIBLE;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.NOT_COMPATIBLE;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.NOT_COMPATIBLE;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.NOT_COMPATIBLE;
-                } else {
-                    message = Locale.En.NOT_COMPATIBLE;
-                }
-                break;
+        case NOT_COMPATIBLE:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.NOT_COMPATIBLE;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.NOT_COMPATIBLE;
+            } else {
+                message = Locale.En.NOT_COMPATIBLE;
+            }
+            break;
 
-            case CONTENT_EXPIRED:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.CONTENT_EXPIRED;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.CONTENT_EXPIRED;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.CONTENT_EXPIRED;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.CONTENT_EXPIRED;
-                } else {
-                    message = Locale.En.CONTENT_EXPIRED;
-                }
-                break;
+        case CONTENT_EXPIRED:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.CONTENT_EXPIRED;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.CONTENT_EXPIRED;
+            } else {
+                message = Locale.En.CONTENT_EXPIRED;
+            }
+            break;
 
-            case ALREADY_EXIST:
-                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                    message = Locale.Hi.ALREADY_EXIST;
-                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                    message = Locale.Mr.ALREADY_EXIST;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                    message = Locale.Te.ALREADY_EXIST;
-                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                    message = Locale.Ta.ALREADY_EXIST;
-                } else {
-                    message = Locale.En.ALREADY_EXIST;
-                }
-                break;
-
+        case ALREADY_EXIST:
+            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                message = Locale.Hi.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                message = Locale.Mr.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                message = Locale.Te.ALREADY_EXIST;
+            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                message = Locale.Ta.ALREADY_EXIST;
+            } else {
+                message = Locale.En.ALREADY_EXIST;
+            }
+            break;
         }
 
         return message;
@@ -210,7 +209,8 @@ public class SplashScreen extends CordovaPlugin {
     @Override
     protected void pluginInitialize() {
         splashSharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
-        appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file", Context.MODE_PRIVATE);
+        appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file",
+                Context.MODE_PRIVATE);
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -237,7 +237,7 @@ public class SplashScreen extends CordovaPlugin {
 
     @Override
     public void onPause(boolean multitasking) {
-       
+
     }
 
     @Override
@@ -282,11 +282,11 @@ public class SplashScreen extends CordovaPlugin {
             int currentCount = args.getInt(0);
             int totalCount = args.getInt(1);
             setImportProgress(currentCount, totalCount);
-        }else if (action.equals("getActions")) {
+        } else if (action.equals("getActions")) {
             importingInProgress = true;
             callbackContext.success(actions.toString());
             actions = new JSONArray();
-        }else if (action.equals("markImportDone")) {
+        } else if (action.equals("markImportDone")) {
             importingInProgress = false;
             hideSplashScreen(false);
             callbackContext.success();
@@ -365,21 +365,19 @@ public class SplashScreen extends CordovaPlugin {
                     splashDialog = null;
                     splashImageView = null;
                 }
-
             }
         });
     }
 
-    private void generateTelemetry() throws JSONException{
+    private void generateTelemetry() throws JSONException {
         JSONObject impression = new JSONObject();
         impression.put("eid", "IMPRESSION");
 
-        JSONObject impresionAction =new JSONObject();
-        impresionAction.put("type","TELEMETRY");
-        impresionAction.put("payload",impression);
+        JSONObject impresionAction = new JSONObject();
+        impresionAction.put("type", "TELEMETRY");
+        impresionAction.put("payload", impression);
 
         actions.put(impresionAction);
-
 
         boolean isFirstTime = splashSharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
         if (isFirstTime) {
@@ -393,9 +391,9 @@ public class SplashScreen extends CordovaPlugin {
         extraInfo.put("isFirstTime", isFirstTime);
         interact.put("extraInfo", extraInfo);
 
-        JSONObject interactAction =new JSONObject();
-        interactAction.put("type","TELEMETRY");
-        interactAction.put("payload",interact);
+        JSONObject interactAction = new JSONObject();
+        interactAction.put("type", "TELEMETRY");
+        interactAction.put("payload", interact);
         actions.put(interactAction);
     }
 
@@ -457,7 +455,6 @@ public class SplashScreen extends CordovaPlugin {
                 splashDialog.setContentView(splashContent);
                 splashDialog.setCancelable(false);
                 splashDialog.show();
-
             }
         });
     }
@@ -515,8 +512,7 @@ public class SplashScreen extends CordovaPlugin {
         splashImageView.setMinimumHeight(splashDim);
         splashImageView.setMinimumWidth(splashDim);
 
-        // TODO: Use the background color of the webView's parent instead of using the
-        // preference.
+        //TODO: Use the background color of the webView's parent instead of using the preference.
 
         splashImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
@@ -526,7 +522,6 @@ public class SplashScreen extends CordovaPlugin {
             Glide.with(context).load(logoUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(drawableId).into(splashImageView);
         }
-
     }
 
     @NonNull
@@ -561,7 +556,9 @@ public class SplashScreen extends CordovaPlugin {
 
     private void handleIntentForDeeplinking(Intent intent) {
         // get the locale set by user from the mobile
-//    localeSelected = GenieService.getService().getKeyStore().getString("sunbirdselected_language_code", "en");
+        // localeSelected =
+        // GenieService.getService().getKeyStore().getString("sunbirdselected_language_code",
+        // "en");
         deepLinkIntent = intent;
         mDeepLinkNavigation.validateAndHandleDeepLink(intent, new DeepLinkNavigation.IValidateDeepLink() {
             @Override
@@ -585,11 +582,10 @@ public class SplashScreen extends CordovaPlugin {
                 } catch (JSONException ex) {
                     Log.e("SplashScreen", ex.toString());
                 }
-
             }
 
             @Override
-            public void validServerDeepLink(){
+            public void validServerDeepLink() {
                 if (intent.getData() == null) {
                     return;
                 }
@@ -606,10 +602,12 @@ public class SplashScreen extends CordovaPlugin {
                 } else if (pair[1].equalsIgnoreCase("play")
                         && (pair[2].equalsIgnoreCase("collection") || pair[2].equalsIgnoreCase("content"))) {
                     addDeepLinkAction(url, "content");
-                } else if ((pair[1].equalsIgnoreCase("learn") || pair[1].equalsIgnoreCase("explore-course")) && pair[2].equalsIgnoreCase("course")) {
+                } else if ((pair[1].equalsIgnoreCase("learn") || pair[1].equalsIgnoreCase("explore-course"))
+                        && pair[2].equalsIgnoreCase("course")) {
+                    addDeepLinkAction(url, "content");
+                } else if (pair[2].equalsIgnoreCase("play") && pair[3].equalsIgnoreCase("content")) {   // NCERT unlisted content
                     addDeepLinkAction(url, "content");
                 }
-
             }
 
             @Override
@@ -636,9 +634,8 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException {
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+            throws JSONException {
         if (requestCode == 100) {
             addImportAction(deepLinkIntent);
             deepLinkIntent = null;
@@ -648,41 +645,39 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     private void addImportAction(Intent deepLinkIntent) {
-        try{
+        try {
             String filePath = getFilePathFromIntent(deepLinkIntent);
-            if(filePath!= null && !filePath.isEmpty()){
-                JSONObject importPayload =new JSONObject();
+            if (filePath != null && !filePath.isEmpty()) {
+                JSONObject importPayload = new JSONObject();
                 importPayload.put("filePath", filePath);
 
-                JSONObject importAction =new JSONObject();
-                importAction.put("type","IMPORT");
-                importAction.put("payload",importPayload);
+                JSONObject importAction = new JSONObject();
+                importAction.put("type", "IMPORT");
+                importAction.put("payload", importPayload);
 
                 actions.put(importAction);
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
 
         }
-
     }
 
-    private void addDeepLinkAction(String url, String type){
-        try{
+    private void addDeepLinkAction(String url, String type) {
+        try {
             String identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
-            if(identifier!= null && !identifier.isEmpty()){
-                JSONObject deeplinkPayload =new JSONObject();
+            if (identifier != null && !identifier.isEmpty()) {
+                JSONObject deeplinkPayload = new JSONObject();
                 deeplinkPayload.put("identifier", identifier);
                 deeplinkPayload.put("type", type);
 
-                JSONObject deeplinkAction =new JSONObject();
-                deeplinkAction.put("type","DEEPLINK");
-                deeplinkAction.put("payload",deeplinkPayload);
+                JSONObject deeplinkAction = new JSONObject();
+                deeplinkAction.put("type", "DEEPLINK");
+                deeplinkAction.put("payload", deeplinkPayload);
                 actions.put(deeplinkAction);
             }
-        }catch(JSONException e){
+        } catch (JSONException e) {
 
         }
-
     }
 
     private String getFilePathFromIntent(Intent intent) {
@@ -694,7 +689,7 @@ public class SplashScreen extends CordovaPlugin {
 
         if (intent.getScheme().equals("content")) {
             return ImportExportUtil.getAttachmentFilePath(cordova.getActivity().getApplicationContext(), uri);
-            } else if (intent.getScheme().equals("file")) {
+        } else if (intent.getScheme().equals("file")) {
             return uri.getPath();
         } else {
             return "";

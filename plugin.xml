@@ -51,6 +51,8 @@
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="https" />
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="http" />
 
+                <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/resources/play/content" android:scheme="https" />
+
             </intent-filter>
 
             <!--Deep link for ecar files-->
