@@ -78,7 +78,8 @@ public class DeepLinkNavigation {
 
 
             } else if ((DeepLinkUtility.isDeepLinkHttp(intentData)
-                    || DeepLinkUtility.isDeepLinkHttps(intentData))
+                    || DeepLinkUtility.isDeepLinkHttps(intentData)
+                    || DeepLinkUtility.isDeepLinkCustomScheme(mActivity, intentData))
                     && !new File(intentData.toString()).exists()) {    // Server deep link
                 if (iValidateDeepLink != null) {
                     iValidateDeepLink.validServerDeepLink();

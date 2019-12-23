@@ -592,8 +592,9 @@ public class SplashScreen extends CordovaPlugin {
                 }
 
                 String url = intent.getData().toString();
-
-                String newString = url.replace("https://", "").replace("http://", "");
+                // String customScheme = DeepLinkUtility.getStringResourceByName(context, "custom_scheme_url")
+                // String newString = url.replace("https://", "").replace("http://", "").replace("staging.diksha.app://", "");
+                String newString = url.replace("//", "");
                 String[] pair = newString.split("/");
 
                 if (pair[1].equalsIgnoreCase("public")) {

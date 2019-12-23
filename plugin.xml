@@ -55,6 +55,13 @@
 
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="deeplink" android:scheme="@string/custom_scheme_url" />
+            </intent-filter>
+
             <!--Deep link for ecar files-->
 
             <intent-filter>
