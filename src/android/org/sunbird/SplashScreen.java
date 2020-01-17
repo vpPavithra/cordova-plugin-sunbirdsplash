@@ -592,24 +592,7 @@ public class SplashScreen extends CordovaPlugin {
                 }
 
                 String url = intent.getData().toString();
-                // String customScheme = DeepLinkUtility.getStringResourceByName(context, "custom_scheme_url")
-                // String newString = url.replace("https://", "").replace("http://", "").replace("staging.diksha.app://", "");
-                String newString = url.replace("//", "");
-                String[] pair = newString.split("/");
-
-                if (pair[1].equalsIgnoreCase("public")) {
-                    addDeepLinkAction(url, "content", null);
-                } else if (pair[1].equalsIgnoreCase("dial") || pair[1].equalsIgnoreCase("QR")) {
-                    addDeepLinkAction(url, "dial", null);
-                } else if (pair[1].equalsIgnoreCase("play")
-                        && (pair[2].equalsIgnoreCase("collection") || pair[2].equalsIgnoreCase("content"))) {
-                    addDeepLinkAction(url, "content", null);
-                } else if ((pair[1].equalsIgnoreCase("learn") || pair[1].equalsIgnoreCase("explore-course"))
-                        && pair[2].equalsIgnoreCase("course")) {
-                    addDeepLinkAction(url, "content", null);
-                } else if (pair[2].equalsIgnoreCase("play") && pair[3].equalsIgnoreCase("content")) { // NCERT unlisted
-                    addDeepLinkAction(url, "content", pair[4]);
-                }
+                addDeepLinkAction(url);
             }
 
             @Override
@@ -664,21 +647,15 @@ public class SplashScreen extends CordovaPlugin {
         }
     }
 
-    private void addDeepLinkAction(String url, String type, String identifier) {
+    private void addDeepLinkAction(String url) {
         try {
-            if (identifier == null || identifier.isEmpty()) {
-                identifier = url.substring(url.lastIndexOf('/') + 1, url.length());
-            }
-            if (identifier != null && !identifier.isEmpty()) {
-                JSONObject deeplinkPayload = new JSONObject();
-                deeplinkPayload.put("identifier", identifier);
-                deeplinkPayload.put("type", type);
+            JSONObject deeplinkPayload = new JSONObject();
+            deeplinkPayload.put("url", url);
 
-                JSONObject deeplinkAction = new JSONObject();
-                deeplinkAction.put("type", "DEEPLINK");
-                deeplinkAction.put("payload", deeplinkPayload);
-                actions.put(deeplinkAction);
-            }
+            JSONObject deeplinkAction = new JSONObject();
+            deeplinkAction.put("type", "DEEPLINK");
+            deeplinkAction.put("payload", deeplinkPayload);
+            actions.put(deeplinkAction);
         } catch (JSONException e) {
 
         }
