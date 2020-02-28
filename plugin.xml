@@ -44,9 +44,22 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/play/collection" android:scheme="http" />
 
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn/course" android:scheme="https" />
-                <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course/course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn/course" android:scheme="http" />
 
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course/course" android:scheme="https" />
+                
+                <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="https" />
+                <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="http" />
+
+                <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/resources/play/content" android:scheme="https" />
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="deeplink" android:scheme="@string/custom_scheme_url" />
             </intent-filter>
 
             <!--Deep link for ecar files-->

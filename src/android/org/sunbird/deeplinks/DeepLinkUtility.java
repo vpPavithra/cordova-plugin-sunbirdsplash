@@ -37,7 +37,15 @@ public class DeepLinkUtility {
         return false;
     }
 
-    private static String getStringResourceByName(Context context, String string) {
+    public static boolean isDeepLinkCustomScheme(Context context, Uri intentData) {
+        if (intentData.getScheme().equalsIgnoreCase(getStringResourceByName(context, "custom_scheme_url"))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static String getStringResourceByName(Context context, String string) {
         if (context == null) {
             return null;
         } else {
