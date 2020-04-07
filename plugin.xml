@@ -39,6 +39,16 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn/course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course/course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/play/quiz" android:scheme="https" />
+
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/public" android:scheme="https" />	
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/dial" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/get/dial" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/content" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/collection" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/learn/course" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore-course/course" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/quiz" android:scheme="https" />
+
                 <!-- These below are for state links -->
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="https" />
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="http" />
