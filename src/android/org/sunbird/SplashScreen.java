@@ -372,25 +372,28 @@ public class SplashScreen extends CordovaPlugin {
     private void generateTelemetry() throws JSONException {
         JSONObject impression = new JSONObject();
         impression.put("eid", "IMPRESSION");
-
-        JSONObject impresionAction = new JSONObject();
-        impresionAction.put("type", "TELEMETRY");
-        impresionAction.put("payload", impression);
-
-        actions.put(impresionAction);
-
+    
         boolean isFirstTime = splashSharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
         if (isFirstTime) {
             splashSharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
         }
-
-        JSONObject interact = new JSONObject();
-        interact.put("eid", "INTERACT");
-
+    
         JSONObject extraInfo = new JSONObject();
         extraInfo.put("isFirstTime", isFirstTime);
+        impression.put("extraInfo", extraInfo);
+    
+        JSONObject impresionAction = new JSONObject();
+        impresionAction.put("type", "TELEMETRY");
+        impresionAction.put("payload", impression);
+    
+    
+        actions.put(impresionAction);
+    
+        JSONObject interact = new JSONObject();
+        interact.put("eid", "INTERACT");
+    
         interact.put("extraInfo", extraInfo);
-
+    
         JSONObject interactAction = new JSONObject();
         interactAction.put("type", "TELEMETRY");
         interactAction.put("payload", interact);
