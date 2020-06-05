@@ -217,6 +217,31 @@
                 <data android:host="*" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="*"
+                    android:mimeType="application/zip"
+                    android:scheme="content" />
+            </intent-filter>
+
+             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern="/*.*\\.zip" />
+                <data android:pathPattern="/*.*\\..*\\.zip" />
+                <data android:pathPattern="/*.*\\..*\\..*\\.zip" />
+                <data android:pathPattern="/*.*\\..*\\..*\\..*\\.zip" />
+                <data android:host="*" />
+            </intent-filter>
+
       </config-file>
 
       <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
