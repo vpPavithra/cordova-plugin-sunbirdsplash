@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +38,7 @@ import org.sunbird.locales.Locale;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SplashScreen extends CordovaPlugin {
 
@@ -73,7 +75,7 @@ public class SplashScreen extends CordovaPlugin {
     private String localeSelected;
     private Intent deepLinkIntent;
     private JSONArray actions = new JSONArray();
-    private String joyFulTheme;
+    private String currentSelectedTheme;
 
     private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
@@ -228,7 +230,7 @@ public class SplashScreen extends CordovaPlugin {
         splashSharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
         appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file",
                 Context.MODE_PRIVATE);
-        joyFulTheme = appSharedPreferences.getString("new_theme_selected", "JOYFUL");
+        currentSelectedTheme = appSharedPreferences.getString("current_selected_theme", "DEFAULT");
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -237,7 +239,7 @@ public class SplashScreen extends CordovaPlugin {
         });
         // Save initial orientation.
         orientation = cordova.getActivity().getResources().getConfiguration().orientation;
-        displaySplashScreen(joyFulTheme);
+        displaySplashScreen(currentSelectedTheme);
 
         mDeepLinkNavigation = new DeepLinkNavigation(cordova.getActivity());
 
@@ -338,7 +340,7 @@ public class SplashScreen extends CordovaPlugin {
             if ("hide".equals(data.toString())) {
                 hide();
             } else if ("show".equals(data.toString())) {
-                this.displaySplashScreen(joyFulTheme);
+                this.displaySplashScreen(currentSelectedTheme);
             }
         }
         return null;
@@ -475,6 +477,12 @@ public class SplashScreen extends CordovaPlugin {
                         & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
                     splashDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                }
+                if (selectedTheme.equalsIgnoreCase("JOYFUL")) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Objects.requireNonNull(splashDialog.getWindow()).addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        splashDialog.getWindow().setStatusBarColor(Color.parseColor("#EDF4F9"));
+                    }
                 }
                 splashDialog.setContentView(splashContent);
                 splashDialog.setCancelable(false);
@@ -656,7 +664,7 @@ public class SplashScreen extends CordovaPlugin {
                     addImportAction(intent);
                 } else {
                     importingInProgress = true;
-                    displaySplashScreen(joyFulTheme);
+                    displaySplashScreen(currentSelectedTheme);
                     cordova.requestPermission(SplashScreen.this, 100, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
 
