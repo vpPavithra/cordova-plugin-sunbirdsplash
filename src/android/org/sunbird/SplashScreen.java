@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,14 +32,13 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sunbird.app.R;
 import org.sunbird.deeplinks.DeepLinkNavigation;
 import org.sunbird.locales.Locale;
 import org.sunbird.util.ImportExportUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class SplashScreen extends CordovaPlugin {
 
@@ -60,6 +60,7 @@ public class SplashScreen extends CordovaPlugin {
     private static final int NOT_COMPATIBLE = 6;
     private static final int CONTENT_EXPIRED = 7;
     private static final int ALREADY_EXIST = 8;
+    private static final int WELCOME = 9;
 
     private static Dialog splashDialog;
     private ImageView splashImageView;
@@ -74,13 +75,16 @@ public class SplashScreen extends CordovaPlugin {
     private String localeSelected;
     private Intent deepLinkIntent;
     private JSONArray actions = new JSONArray();
+    private String currentSelectedTheme;
 
     private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
         return cordova.getActivity().getResources().getIdentifier(name, resourceType,
                 cordova.getActivity().getApplicationInfo().packageName);
     }
 
-    private String getRelevantMessage(String localeSelected, int type) {
+    private String getRelevantMessage(String localeSelected, int type, String appName) {
+        Locale locale = new Locale();
+        locale.setAppName(appName);
         String message = null;
         switch (type) {
         case IMPORT_SUCCESS:
@@ -180,10 +184,25 @@ public class SplashScreen extends CordovaPlugin {
                 message = Locale.En.ALREADY_EXIST;
             }
             break;
+
+            case WELCOME:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.WELCOME;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.WELCOME;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.WELCOME;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.WELCOME;
+                } else {
+                    message = Locale.En.WELCOME;
+                }
+                break;
         }
 
         return message;
     }
+
 
     // Helper to be compile-time compatible with both Cordova 3.x and 4.x.
     private View getView() {
@@ -211,6 +230,7 @@ public class SplashScreen extends CordovaPlugin {
         splashSharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
         appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file",
                 Context.MODE_PRIVATE);
+        currentSelectedTheme = appSharedPreferences.getString("current_selected_theme", "JOYFUL");
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -219,7 +239,7 @@ public class SplashScreen extends CordovaPlugin {
         });
         // Save initial orientation.
         orientation = cordova.getActivity().getResources().getConfiguration().orientation;
-        displaySplashScreen();
+        displaySplashScreen(currentSelectedTheme);
 
         mDeepLinkNavigation = new DeepLinkNavigation(cordova.getActivity());
 
@@ -301,7 +321,7 @@ public class SplashScreen extends CordovaPlugin {
         localeSelected = appSharedPreferences.getString("sunbirdselected_language_code", "en");
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT);
+                String msg = getRelevantMessage(localeSelected, IMPORTING_COUNT, "Sunbird");
                 msg = msg + " (" + currentCount + "/" + totalCount + ")";
                 importStatusTextView.setText(msg);
             }
@@ -320,7 +340,7 @@ public class SplashScreen extends CordovaPlugin {
             if ("hide".equals(data.toString())) {
                 hide();
             } else if ("show".equals(data.toString())) {
-                this.displaySplashScreen();
+                this.displaySplashScreen(currentSelectedTheme);
             }
         }
         return null;
@@ -404,7 +424,7 @@ public class SplashScreen extends CordovaPlugin {
      * Shows the splash screen over the full Activity
      */
     @SuppressWarnings("deprecation")
-    private void displaySplashScreen() {
+    private void displaySplashScreen(String selectedTheme) {
         try {
             generateTelemetry();
         } catch (JSONException e) {
@@ -437,15 +457,18 @@ public class SplashScreen extends CordovaPlugin {
                 Context context = webView.getContext();
                 int splashDim = getSplashDim(display);
 
-                LinearLayout splashContent = createParentContentView(context);
+                LinearLayout splashContent = createParentContentView(context, selectedTheme);
 
-                createLogoImageView(context, splashDim, drawableId, logoUrl);
-                createImportStatusView(context);
-                TextView appNameTextView = createAppNameView(context, appName);
-
+                createLogoImageView(context, splashDim, drawableId, logoUrl, selectedTheme);
                 splashContent.addView(splashImageView);
+                TextView appNameTextView = createAppNameView(context, appName, selectedTheme);
                 splashContent.addView(appNameTextView);
+                createImportStatusView(context);
                 splashContent.addView(importStatusTextView);
+                if (selectedTheme.equals("JOYFUL")) {
+                    ImageView newLogo = createBottomImageView(context);
+                    splashContent.addView(newLogo);
+                }
 
                 // Create and show the dialog
                 splashDialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
@@ -455,6 +478,12 @@ public class SplashScreen extends CordovaPlugin {
                     splashDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
+                if (selectedTheme.equalsIgnoreCase("JOYFUL")) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Objects.requireNonNull(splashDialog.getWindow()).addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        splashDialog.getWindow().setStatusBarColor(Color.parseColor("#EDF4F9"));
+                    }
+                }
                 splashDialog.setContentView(splashContent);
                 splashDialog.setCancelable(false);
                 splashDialog.show();
@@ -462,19 +491,35 @@ public class SplashScreen extends CordovaPlugin {
         });
     }
 
+    private ImageView createBottomImageView(Context context) {
+        ImageView splashImageBottomView = new ImageView(context);
+        splashImageBottomView.setImageResource(R.drawable.ic_combined_shape);
+        LinearLayout.LayoutParams newImage = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        splashImageBottomView.setLayoutParams(newImage);
+        return splashImageBottomView;
+    }
+
     private int getSplashDim(Display display) {
         return display.getWidth() < display.getHeight() ? display.getWidth() : display.getHeight();
     }
 
     @NonNull
-    private TextView createAppNameView(Context context, String appName) {
+    private TextView createAppNameView(Context context, String appName, String newThemeSelected) {
         TextView appNameTextView = new TextView(context);
         LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
-        textViewParam.setMargins(10, 10, 10, 10);
+        if (newThemeSelected.equalsIgnoreCase("JOYFUL")) {
+            localeSelected = appSharedPreferences.getString("sunbirdselected_language_code", "en");
+            String welcomeText = getRelevantMessage(localeSelected, WELCOME, appName);
+            appNameTextView.setText(welcomeText);
+            appNameTextView.setTextSize(26);
+            textViewParam.topMargin = 30;
+            appNameTextView.setTextColor(Color.parseColor("#024F9D"));
+        } else {
         appNameTextView.setText(appName);
         appNameTextView.setTextSize(20);
         appNameTextView.setTextColor(Color.GRAY);
+        }
         appNameTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         appNameTextView.setLayoutParams(textViewParam);
 
@@ -486,7 +531,7 @@ public class SplashScreen extends CordovaPlugin {
         try {
             String NOTO_COMBINED = "www/assets/fonts/natosans/" + "NotoSans-Regular.ttf";
             Typeface tf = Typeface.createFromAsset(context.getAssets(), NOTO_COMBINED);
-            textView.setTypeface(tf);
+            textView.setTypeface(tf, Typeface.BOLD);
         } catch (Exception exception) {
             System.out.println(exception);
         }
@@ -497,19 +542,24 @@ public class SplashScreen extends CordovaPlugin {
         importStatusTextView = new TextView(context);
         LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
-        textViewParam.setMargins(10, 10, 10, 10);
-        importStatusTextView.setTextSize(10);
+        textViewParam.setMargins(10, 0, 10, 0);
         importStatusTextView.setTextColor(Color.GRAY);
         importStatusTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         importStatusTextView.setLayoutParams(textViewParam);
         setTypeFace(context, importStatusTextView);
     }
 
-    private void createLogoImageView(Context context, int splashDim, int drawableId, String logoUrl) {
+    private void createLogoImageView(Context context, int splashDim, int drawableId, String logoUrl, String newTheme) {
         splashImageView = new ImageView(context);
-        // splashImageView.setImageResource(drawableId);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(splashDim, splashDim);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+        if (newTheme.equalsIgnoreCase("JOYFUL")) {
+            layoutParams.setMargins(0, 30, 0, 0);
+            layoutParams.weight = 2;
+        } else {
         layoutParams.setMargins(10, splashDim / 4, 10, 0);
+
+        }
         splashImageView.setLayoutParams(layoutParams);
 
         splashImageView.setMinimumHeight(splashDim);
@@ -529,10 +579,16 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     @NonNull
-    private LinearLayout createParentContentView(Context context) {
+    private LinearLayout createParentContentView(Context context, String themeSelected) {
         LinearLayout splashContent = new LinearLayout(context);
         splashContent.setOrientation(LinearLayout.VERTICAL);
+        if (themeSelected.equalsIgnoreCase("JOYFUL")) {
+            splashContent.setBackgroundColor(Color.parseColor("#EDF4F9"));
+            splashContent.layout(8, 8, 8, 8);
+        } else {
         splashContent.setBackgroundColor(Color.WHITE);
+
+        }
         LayoutParams parentParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         splashContent.setLayoutParams(parentParams);
         return splashContent;
@@ -608,7 +664,7 @@ public class SplashScreen extends CordovaPlugin {
                     addImportAction(intent);
                 } else {
                     importingInProgress = true;
-                    displaySplashScreen();
+                    displaySplashScreen(currentSelectedTheme);
                     cordova.requestPermission(SplashScreen.this, 100, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
 
