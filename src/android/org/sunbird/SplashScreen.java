@@ -230,7 +230,7 @@ public class SplashScreen extends CordovaPlugin {
         splashSharedPreferences = cordova.getActivity().getSharedPreferences("SUNBIRD_SPLASH", Context.MODE_PRIVATE);
         appSharedPreferences = cordova.getActivity().getSharedPreferences("org.ekstep.genieservices.preference_file",
                 Context.MODE_PRIVATE);
-        currentSelectedTheme = appSharedPreferences.getString("current_selected_theme", "JOYFUL");
+        currentSelectedTheme = appSharedPreferences.getString("current_selected_theme", "DEFAULT");
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
