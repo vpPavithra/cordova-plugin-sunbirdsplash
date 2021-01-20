@@ -103,19 +103,6 @@
                     android:mimeType="application/ecar"
                     android:scheme="content" />
             </intent-filter>
-
-                 <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:mimeType="*/*"
-                    android:scheme="content"
-                    android:host="*" />
-            </intent-filter>
             
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -266,6 +253,7 @@
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
       <source-file src="src/android/org/sunbird/locales/Locale.java" target-dir="src/org/sunbird/locales" />
+        <resource-file src="res/drawable/ic_combined_shape.xml" target="res/drawable/ic_combined_shape.xml"/>
 
     </platform>
 
