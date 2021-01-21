@@ -55,6 +55,9 @@
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/resources" android:scheme="https" />
 
+                <!--Deep link for ML Usecase-->
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/manage-learn" android:scheme="https" />
+
                 <!-- These below are for state links -->
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="https" />
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="http" />
