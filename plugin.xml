@@ -42,6 +42,8 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/resources" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/faq" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/profile" android:scheme="https" />
 
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/public" android:scheme="https" />	
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/dial" android:scheme="https" />
@@ -54,6 +56,8 @@
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/resources" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/faq" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/profile" android:scheme="https" />
 
                 <!--Deep link for ML Usecase-->
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/manage-learn" android:scheme="https" />
