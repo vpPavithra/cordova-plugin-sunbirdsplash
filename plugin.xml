@@ -41,6 +41,7 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/resources" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/search" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/faq" android:scheme="https" />
@@ -56,6 +57,7 @@
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore-course" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/learn" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/resources" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/search" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/faq" android:scheme="https" />
