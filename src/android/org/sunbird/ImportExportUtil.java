@@ -3,7 +3,6 @@ package org.sunbird.util;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.File;
@@ -27,7 +26,7 @@ public final class ImportExportUtil {
             if (nameIndex >= 0) {
                 name = cursor.getString(nameIndex);
             }
-            fullPath = Environment.getExternalStorageDirectory() + "/" + name;
+            fullPath = context.getExternalFilesDir(null).getAbsolutePath() + "/" + name;
             is = context.getContentResolver().openInputStream(uri);
             os = new FileOutputStream(fullPath);
 
