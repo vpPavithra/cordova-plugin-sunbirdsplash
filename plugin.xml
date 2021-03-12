@@ -44,6 +44,7 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/resources" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/search" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/search/Library" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/faq" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/profile" android:scheme="https" />
 
