@@ -742,7 +742,7 @@ public class SplashScreen extends CordovaPlugin {
         private void fetchFromVendorApp(Intent vendorAppIntent) throws JSONException {
         try {
                 Bundle bundle = vendorAppIntent.getExtras();
-                if (bundle != null && bundle.get('type') != null) {
+                if (bundle != null && bundle.get("type") != null) {
                     JSONObject vendorAppPayload = new JSONObject();
                     JSONObject vendorAppAction = new JSONObject();
                     JSONObject payload ;
