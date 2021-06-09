@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -700,6 +701,8 @@ public class SplashScreen extends CordovaPlugin {
                 importAction.put("payload", importPayload);
 
                 actions.put(importAction);
+            } else {
+                fetchFromVendorApp(deepLinkIntent);
             }
         } catch (JSONException e) {
 
@@ -736,4 +739,66 @@ public class SplashScreen extends CordovaPlugin {
         }
     }
 
+        private void fetchFromVendorApp(Intent vendorAppIntent) throws JSONException {
+        try {
+                Bundle bundle = vendorAppIntent.getExtras();
+                if (bundle != null && bundle.get("type") != null) {
+                    JSONObject vendorAppPayload = new JSONObject();
+                    JSONObject vendorAppAction = new JSONObject();
+                    JSONObject payload ;
+
+                    switch (bundle.get("type").toString()) {
+                        case "ACTION_DEEPLINK":
+
+                            payload = IntentUtil.toJsonObject(bundle);
+                            vendorAppPayload.put("action", "ACTION_DEEPLINK");
+                            vendorAppPayload.put("data", payload.get("payload"));
+
+                            vendorAppAction.put("type", "DEEPLINK");
+                            vendorAppAction.put("payload", vendorAppPayload);
+                            actions.put(vendorAppAction);
+                            break;
+                        case "ACTION_SEARCH":
+                            payload = IntentUtil.toJsonObject(bundle);
+                            vendorAppPayload.put("action", "ACTION_SEARCH");
+                            vendorAppPayload.put("data", payload.get("payload"));
+
+                            vendorAppAction.put("type", "DEEPLINK");
+                            vendorAppAction.put("payload", vendorAppPayload);
+                            actions.put(vendorAppAction);
+                            break;
+                        case "ACTION_GOTO":
+                            payload = IntentUtil.toJsonObject(bundle);
+                            vendorAppPayload.put("action", "ACTION_GOTO");
+                            vendorAppPayload.put("data", payload.get("payload"));
+
+                            vendorAppAction.put("type", "DEEPLINK");
+                            vendorAppAction.put("payload", vendorAppPayload);
+                            actions.put(vendorAppAction);
+                            break;
+                        case "ACTION_SETPROFILE":
+                            payload = IntentUtil.toJsonObject(bundle);
+                            vendorAppPayload.put("action", "ACTION_SETPROFILE");
+                            vendorAppPayload.put("data", payload.get("payload"));
+
+
+                            vendorAppAction.put("type", "DEEPLINK");
+                            vendorAppAction.put("payload", vendorAppPayload);
+                            actions.put(vendorAppAction);
+                            break;
+                        case "ACTION_PLAY":
+                            payload = IntentUtil.toJsonObject(bundle);
+                            vendorAppPayload.put("action", "ACTION_PLAY");
+                            vendorAppPayload.put("data", payload.get("payload"));
+
+                            vendorAppAction.put("type", "DEEPLINK");
+                            vendorAppAction.put("payload", vendorAppPayload);
+                            actions.put(vendorAppAction);
+                            break;
+                    }
+                }
+            } catch (JSONException e) {
+                e.getMessage();
+            }
+     }
 }

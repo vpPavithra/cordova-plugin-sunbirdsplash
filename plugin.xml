@@ -41,7 +41,12 @@
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore-course" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/explore" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/learn" android:scheme="https" />
                 <data android:host="@string/deeplink_base_url" android:pathPrefix="/resources" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/search" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/search/Library" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/faq" android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/profile" android:scheme="https" />
 
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/public" android:scheme="https" />	
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/dial" android:scheme="https" />
@@ -53,7 +58,14 @@
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore-course" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/play/quiz" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/explore" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/learn" android:scheme="https" />
                 <data android:host="@string/deeplink_igot_url" android:pathPrefix="/resources" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/search" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/faq" android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" android:pathPrefix="/profile" android:scheme="https" />
+
+                <!--Deep link for ML Usecase-->
+                <data android:host="@string/deeplink_base_url" android:pathPrefix="/manage-learn" android:scheme="https" />
 
                 <!-- These below are for state links -->
                 <data android:host="@string/deeplink_ncert_url" android:pathPrefix="/QR" android:scheme="https" />
@@ -65,18 +77,17 @@
                 <!-- <data android:host="deeplink" android:pathPrefix="/content" android:scheme="@string/custom_scheme_url" /> -->
             </intent-filter>
 
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="@string/deeplink_base_url" android:scheme="https" />
-            </intent-filter> -->
+            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:host="deeplink" android:scheme="@string/custom_scheme_url" />
+                <data android:host="deeplink" android:scheme="@string/custom_scheme_url"  android:pathPrefix="/manage-learn" />
             </intent-filter>
 
             <!--Deep link for ecar files-->
@@ -249,6 +260,7 @@
       </config-file>
 
       <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
+      <source-file src="src/android/org/sunbird/IntentUtil.java" target-dir="src/org/sunbird/" />
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
       <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
