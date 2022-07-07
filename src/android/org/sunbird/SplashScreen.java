@@ -11,7 +11,9 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -88,103 +90,103 @@ public class SplashScreen extends CordovaPlugin {
         locale.setAppName(appName);
         String message = null;
         switch (type) {
-        case IMPORT_SUCCESS:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.IMPORT_SUCCESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.IMPORT_SUCCESS;
-            } else {
-                message = Locale.En.IMPORT_SUCCESS;
-            }
-            break;
+            case IMPORT_SUCCESS:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.IMPORT_SUCCESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.IMPORT_SUCCESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.IMPORT_SUCCESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.IMPORT_SUCCESS;
+                } else {
+                    message = Locale.En.IMPORT_SUCCESS;
+                }
+                break;
 
-        case IMPORT_ERROR:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.IMPORT_ERROR;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.IMPORT_ERROR;
-            } else {
-                message = Locale.En.IMPORT_ERROR;
-            }
-            break;
+            case IMPORT_ERROR:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.IMPORT_ERROR;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.IMPORT_ERROR;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.IMPORT_ERROR;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.IMPORT_ERROR;
+                } else {
+                    message = Locale.En.IMPORT_ERROR;
+                }
+                break;
 
-        case IMPORT_PROGRESS:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.IMPORT_PROGRESS;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.IMPORT_PROGRESS;
-            } else {
-                message = Locale.En.IMPORT_PROGRESS;
-            }
-            break;
+            case IMPORT_PROGRESS:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.IMPORT_PROGRESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.IMPORT_PROGRESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.IMPORT_PROGRESS;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.IMPORT_PROGRESS;
+                } else {
+                    message = Locale.En.IMPORT_PROGRESS;
+                }
+                break;
 
-        case IMPORTING_COUNT:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.IMPORTING_COUNT;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.IMPORTING_COUNT;
-            } else {
-                message = Locale.En.IMPORTING_COUNT;
-            }
-            break;
+            case IMPORTING_COUNT:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.IMPORTING_COUNT;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.IMPORTING_COUNT;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.IMPORTING_COUNT;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.IMPORTING_COUNT;
+                } else {
+                    message = Locale.En.IMPORTING_COUNT;
+                }
+                break;
 
-        case NOT_COMPATIBLE:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.NOT_COMPATIBLE;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.NOT_COMPATIBLE;
-            } else {
-                message = Locale.En.NOT_COMPATIBLE;
-            }
-            break;
+            case NOT_COMPATIBLE:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.NOT_COMPATIBLE;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.NOT_COMPATIBLE;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.NOT_COMPATIBLE;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.NOT_COMPATIBLE;
+                } else {
+                    message = Locale.En.NOT_COMPATIBLE;
+                }
+                break;
 
-        case CONTENT_EXPIRED:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.CONTENT_EXPIRED;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.CONTENT_EXPIRED;
-            } else {
-                message = Locale.En.CONTENT_EXPIRED;
-            }
-            break;
+            case CONTENT_EXPIRED:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.CONTENT_EXPIRED;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.CONTENT_EXPIRED;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.CONTENT_EXPIRED;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.CONTENT_EXPIRED;
+                } else {
+                    message = Locale.En.CONTENT_EXPIRED;
+                }
+                break;
 
-        case ALREADY_EXIST:
-            if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
-                message = Locale.Hi.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
-                message = Locale.Mr.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
-                message = Locale.Te.ALREADY_EXIST;
-            } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
-                message = Locale.Ta.ALREADY_EXIST;
-            } else {
-                message = Locale.En.ALREADY_EXIST;
-            }
-            break;
+            case ALREADY_EXIST:
+                if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
+                    message = Locale.Hi.ALREADY_EXIST;
+                } else if (localeSelected.equalsIgnoreCase(Locale.MARATHI)) {
+                    message = Locale.Mr.ALREADY_EXIST;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TELUGU)) {
+                    message = Locale.Te.ALREADY_EXIST;
+                } else if (localeSelected.equalsIgnoreCase(Locale.TAMIL)) {
+                    message = Locale.Ta.ALREADY_EXIST;
+                } else {
+                    message = Locale.En.ALREADY_EXIST;
+                }
+                break;
 
             case WELCOME:
                 if (localeSelected.equalsIgnoreCase(Locale.HINDI)) {
@@ -393,28 +395,28 @@ public class SplashScreen extends CordovaPlugin {
     private void generateTelemetry() throws JSONException {
         JSONObject impression = new JSONObject();
         impression.put("eid", "IMPRESSION");
-    
+
         boolean isFirstTime = splashSharedPreferences.getBoolean(KEY_IS_FIRST_TIME, true);
         if (isFirstTime) {
             splashSharedPreferences.edit().putBoolean(KEY_IS_FIRST_TIME, false).apply();
         }
-    
+
         JSONObject extraInfo = new JSONObject();
         extraInfo.put("isFirstTime", isFirstTime);
         impression.put("extraInfo", extraInfo);
-    
+
         JSONObject impresionAction = new JSONObject();
         impresionAction.put("type", "TELEMETRY");
         impresionAction.put("payload", impression);
-    
-    
+
+
         actions.put(impresionAction);
-    
+
         JSONObject interact = new JSONObject();
         interact.put("eid", "INTERACT");
-    
+
         interact.put("extraInfo", extraInfo);
-    
+
         JSONObject interactAction = new JSONObject();
         interactAction.put("type", "TELEMETRY");
         interactAction.put("payload", interact);
@@ -457,16 +459,17 @@ public class SplashScreen extends CordovaPlugin {
                 Display display = cordova.getActivity().getWindowManager().getDefaultDisplay();
                 Context context = webView.getContext();
                 int splashDim = getSplashDim(display);
-
-                LinearLayout splashContent = createParentContentView(context, selectedTheme);
-
+                Boolean isCustomizable = cordova.getActivity().getResources().getBoolean(getIdOfResource(cordova, "is_customizable", "bool"));
+                String bgColor = cordova.getActivity().getResources().getString(getIdOfResource(cordova, "bg_color", "color"));
+                String appNameTxtColor = cordova.getActivity().getResources().getString(getIdOfResource(cordova, "app_name_txt_color", "color"));
+                LinearLayout splashContent = createParentContentView(context, selectedTheme, isCustomizable, bgColor);
                 createLogoImageView(context, splashDim, drawableId, logoUrl, selectedTheme);
                 splashContent.addView(splashImageView);
-                TextView appNameTextView = createAppNameView(context, appName, selectedTheme);
+                TextView appNameTextView = createAppNameView(context, appName, selectedTheme, isCustomizable, appNameTxtColor);
                 splashContent.addView(appNameTextView);
                 createImportStatusView(context);
                 splashContent.addView(importStatusTextView);
-                if (selectedTheme.equals("JOYFUL")) {
+                if (selectedTheme.equals("JOYFUL") && !isCustomizable) {
                     ImageView newLogo = createBottomImageView(context);
                     splashContent.addView(newLogo);
                 }
@@ -479,12 +482,20 @@ public class SplashScreen extends CordovaPlugin {
                     splashDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
-                if (selectedTheme.equalsIgnoreCase("JOYFUL")) {
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (!isCustomizable) {
+                    if (selectedTheme.equalsIgnoreCase("JOYFUL")) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Objects.requireNonNull(splashDialog.getWindow()).addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            splashDialog.getWindow().setStatusBarColor(Color.parseColor("#EDF4F9"));
+                        }
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Objects.requireNonNull(splashDialog.getWindow()).addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        splashDialog.getWindow().setStatusBarColor(Color.parseColor("#EDF4F9"));
+                        splashDialog.getWindow().setStatusBarColor(Color.parseColor(bgColor));
                     }
                 }
+
                 splashDialog.setContentView(splashContent);
                 splashDialog.setCancelable(false);
                 splashDialog.show();
@@ -505,7 +516,7 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     @NonNull
-    private TextView createAppNameView(Context context, String appName, String newThemeSelected) {
+    private TextView createAppNameView(Context context, String appName, String newThemeSelected, Boolean isCustomizable, String txtColor) {
         TextView appNameTextView = new TextView(context);
         LinearLayout.LayoutParams textViewParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
@@ -517,9 +528,12 @@ public class SplashScreen extends CordovaPlugin {
             textViewParam.topMargin = 30;
             appNameTextView.setTextColor(Color.parseColor("#024F9D"));
         } else {
-        appNameTextView.setText(appName);
-        appNameTextView.setTextSize(20);
-        appNameTextView.setTextColor(Color.GRAY);
+            appNameTextView.setText(appName);
+            appNameTextView.setTextSize(20);
+            appNameTextView.setTextColor(Color.GRAY);
+        }
+        if(isCustomizable){
+            appNameTextView.setTextColor(Color.parseColor(txtColor));
         }
         appNameTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         appNameTextView.setLayoutParams(textViewParam);
@@ -558,7 +572,7 @@ public class SplashScreen extends CordovaPlugin {
             layoutParams.setMargins(0, 30, 0, 0);
             layoutParams.weight = 2;
         } else {
-        layoutParams.setMargins(10, splashDim / 4, 10, 0);
+            layoutParams.setMargins(10, splashDim / 4, 10, 0);
 
         }
         splashImageView.setLayoutParams(layoutParams);
@@ -580,15 +594,19 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     @NonNull
-    private LinearLayout createParentContentView(Context context, String themeSelected) {
+    private LinearLayout createParentContentView(Context context, String themeSelected, Boolean isCustomizable, String bgColor) {
         LinearLayout splashContent = new LinearLayout(context);
         splashContent.setOrientation(LinearLayout.VERTICAL);
-        if (themeSelected.equalsIgnoreCase("JOYFUL")) {
-            splashContent.setBackgroundColor(Color.parseColor("#EDF4F9"));
-            splashContent.layout(8, 8, 8, 8);
-        } else {
-        splashContent.setBackgroundColor(Color.WHITE);
+        if (!isCustomizable) {
+            if (themeSelected.equalsIgnoreCase("JOYFUL")) {
+                splashContent.setBackgroundColor(Color.parseColor("#EDF4F9"));
+                splashContent.layout(8, 8, 8, 8);
+            } else {
+                splashContent.setBackgroundColor(Color.WHITE);
+            }
 
+        } else {
+            splashContent.setBackgroundColor(Color.parseColor(bgColor));
         }
         LayoutParams parentParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         splashContent.setLayoutParams(parentParams);
@@ -739,66 +757,66 @@ public class SplashScreen extends CordovaPlugin {
         }
     }
 
-        private void fetchFromVendorApp(Intent vendorAppIntent) throws JSONException {
+    private void fetchFromVendorApp(Intent vendorAppIntent) throws JSONException {
         try {
-                Bundle bundle = vendorAppIntent.getExtras();
-                if (bundle != null && bundle.get("type") != null) {
-                    JSONObject vendorAppPayload = new JSONObject();
-                    JSONObject vendorAppAction = new JSONObject();
-                    JSONObject payload ;
+            Bundle bundle = vendorAppIntent.getExtras();
+            if (bundle != null && bundle.get("type") != null) {
+                JSONObject vendorAppPayload = new JSONObject();
+                JSONObject vendorAppAction = new JSONObject();
+                JSONObject payload;
 
-                    switch (bundle.get("type").toString()) {
-                        case "ACTION_DEEPLINK":
+                switch (bundle.get("type").toString()) {
+                    case "ACTION_DEEPLINK":
 
-                            payload = IntentUtil.toJsonObject(bundle);
-                            vendorAppPayload.put("action", "ACTION_DEEPLINK");
-                            vendorAppPayload.put("data", payload.get("payload"));
+                        payload = IntentUtil.toJsonObject(bundle);
+                        vendorAppPayload.put("action", "ACTION_DEEPLINK");
+                        vendorAppPayload.put("data", payload.get("payload"));
 
-                            vendorAppAction.put("type", "DEEPLINK");
-                            vendorAppAction.put("payload", vendorAppPayload);
-                            actions.put(vendorAppAction);
-                            break;
-                        case "ACTION_SEARCH":
-                            payload = IntentUtil.toJsonObject(bundle);
-                            vendorAppPayload.put("action", "ACTION_SEARCH");
-                            vendorAppPayload.put("data", payload.get("payload"));
+                        vendorAppAction.put("type", "DEEPLINK");
+                        vendorAppAction.put("payload", vendorAppPayload);
+                        actions.put(vendorAppAction);
+                        break;
+                    case "ACTION_SEARCH":
+                        payload = IntentUtil.toJsonObject(bundle);
+                        vendorAppPayload.put("action", "ACTION_SEARCH");
+                        vendorAppPayload.put("data", payload.get("payload"));
 
-                            vendorAppAction.put("type", "DEEPLINK");
-                            vendorAppAction.put("payload", vendorAppPayload);
-                            actions.put(vendorAppAction);
-                            break;
-                        case "ACTION_GOTO":
-                            payload = IntentUtil.toJsonObject(bundle);
-                            vendorAppPayload.put("action", "ACTION_GOTO");
-                            vendorAppPayload.put("data", payload.get("payload"));
+                        vendorAppAction.put("type", "DEEPLINK");
+                        vendorAppAction.put("payload", vendorAppPayload);
+                        actions.put(vendorAppAction);
+                        break;
+                    case "ACTION_GOTO":
+                        payload = IntentUtil.toJsonObject(bundle);
+                        vendorAppPayload.put("action", "ACTION_GOTO");
+                        vendorAppPayload.put("data", payload.get("payload"));
 
-                            vendorAppAction.put("type", "DEEPLINK");
-                            vendorAppAction.put("payload", vendorAppPayload);
-                            actions.put(vendorAppAction);
-                            break;
-                        case "ACTION_SETPROFILE":
-                            payload = IntentUtil.toJsonObject(bundle);
-                            vendorAppPayload.put("action", "ACTION_SETPROFILE");
-                            vendorAppPayload.put("data", payload.get("payload"));
+                        vendorAppAction.put("type", "DEEPLINK");
+                        vendorAppAction.put("payload", vendorAppPayload);
+                        actions.put(vendorAppAction);
+                        break;
+                    case "ACTION_SETPROFILE":
+                        payload = IntentUtil.toJsonObject(bundle);
+                        vendorAppPayload.put("action", "ACTION_SETPROFILE");
+                        vendorAppPayload.put("data", payload.get("payload"));
 
 
-                            vendorAppAction.put("type", "DEEPLINK");
-                            vendorAppAction.put("payload", vendorAppPayload);
-                            actions.put(vendorAppAction);
-                            break;
-                        case "ACTION_PLAY":
-                            payload = IntentUtil.toJsonObject(bundle);
-                            vendorAppPayload.put("action", "ACTION_PLAY");
-                            vendorAppPayload.put("data", payload.get("payload"));
+                        vendorAppAction.put("type", "DEEPLINK");
+                        vendorAppAction.put("payload", vendorAppPayload);
+                        actions.put(vendorAppAction);
+                        break;
+                    case "ACTION_PLAY":
+                        payload = IntentUtil.toJsonObject(bundle);
+                        vendorAppPayload.put("action", "ACTION_PLAY");
+                        vendorAppPayload.put("data", payload.get("payload"));
 
-                            vendorAppAction.put("type", "DEEPLINK");
-                            vendorAppAction.put("payload", vendorAppPayload);
-                            actions.put(vendorAppAction);
-                            break;
-                    }
+                        vendorAppAction.put("type", "DEEPLINK");
+                        vendorAppAction.put("payload", vendorAppPayload);
+                        actions.put(vendorAppAction);
+                        break;
                 }
-            } catch (JSONException e) {
-                e.getMessage();
             }
-     }
+        } catch (JSONException e) {
+            e.getMessage();
+        }
+    }
 }
