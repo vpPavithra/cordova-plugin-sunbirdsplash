@@ -460,20 +460,25 @@ public class SplashScreen extends CordovaPlugin {
                 Context context = webView.getContext();
                 int splashDim = getSplashDim(display);
                 Boolean isCustomizable = cordova.getActivity().getResources().getBoolean(getIdOfResource(cordova, "is_customizable", "bool"));
+                Boolean shouldUseImageAsSplash = cordova.getActivity().getResources().getBoolean(getIdOfResource(cordova, "should_use_image_as_splash", "bool"));
                 String bgColor = cordova.getActivity().getResources().getString(getIdOfResource(cordova, "bg_color", "color"));
                 String appNameTxtColor = cordova.getActivity().getResources().getString(getIdOfResource(cordova, "app_name_txt_color", "color"));
                 LinearLayout splashContent = createParentContentView(context, selectedTheme, isCustomizable, bgColor);
-                createLogoImageView(context, splashDim, drawableId, logoUrl, selectedTheme);
-                splashContent.addView(splashImageView);
-                TextView appNameTextView = createAppNameView(context, appName, selectedTheme, isCustomizable, appNameTxtColor);
-                splashContent.addView(appNameTextView);
-                createImportStatusView(context);
-                splashContent.addView(importStatusTextView);
-                if (selectedTheme.equals("JOYFUL") && !isCustomizable) {
-                    ImageView newLogo = createBottomImageView(context);
-                    splashContent.addView(newLogo);
+                if(shouldUseImageAsSplash){
+                    createFullScreenImage(context, drawableId);
+                    splashContent.addView(splashImageView);
+                } else {
+                    createLogoImageView(context, splashDim, drawableId, logoUrl, selectedTheme);
+                    splashContent.addView(splashImageView);
+                    TextView appNameTextView = createAppNameView(context, appName, selectedTheme, isCustomizable, appNameTxtColor);
+                    splashContent.addView(appNameTextView);
+                    createImportStatusView(context);
+                    splashContent.addView(importStatusTextView);
+                    if (selectedTheme.equals("JOYFUL") && !isCustomizable) {
+                        ImageView newLogo = createBottomImageView(context);
+                        splashContent.addView(newLogo);
+                    }
                 }
-
                 // Create and show the dialog
                 splashDialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
                 // check to see if the splash screen should be full screen
@@ -591,6 +596,14 @@ public class SplashScreen extends CordovaPlugin {
             Glide.with(context).load(logoUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(drawableId).into(splashImageView);
         }
+    }
+
+    private void createFullScreenImage(Context context, int splashImageId) {
+        splashImageView = new ImageView(context);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        splashImageView.setLayoutParams(layoutParams);
+        splashImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        splashImageView.setImageResource(splashImageId);
     }
 
     @NonNull
