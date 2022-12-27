@@ -17,14 +17,14 @@
     <!-- android -->
     <platform name="android">
 
-      <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="splashscreen">
-          <param name="android-package" value="org.sunbird.SplashScreen" />
-          <param name="onload" value="true" />
-        </feature>
-      </config-file>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="splashscreen">
+            <param name="android-package" value="org.sunbird.SplashScreen" />
+            <param name="onload" value="true" />
+            </feature>
+        </config-file>
 
-      <config-file target="AndroidManifest.xml" parent="application/activity[@android:name='MainActivity']" mode="merge">
+        <config-file target="AndroidManifest.xml" parent="application/activity[@android:name='MainActivity']" mode="merge">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -169,7 +169,7 @@
                 <data android:host="*" />
             </intent-filter>
 
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -242,7 +242,7 @@
                     android:scheme="content" />
             </intent-filter>
 
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -257,14 +257,28 @@
                 <data android:host="*" />
             </intent-filter>
 
-      </config-file>
-
-      <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
-      <source-file src="src/android/org/sunbird/IntentUtil.java" target-dir="src/org/sunbird/" />
-      <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks" />
-      <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
-      <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
-      <source-file src="src/android/org/sunbird/locales/Locale.java" target-dir="src/org/sunbird/locales" />
+        </config-file>
+    
+        <config-file parent="/manifest/application/activity[@android:name='MainActivity']" target="AndroidManifest.xml">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="@string/deeplink_base_url" />
+                <data android:scheme="https" />
+                <data android:host="@string/deeplink_ncert_url" />
+                <data android:scheme="https" />
+                <data android:host="@string/deeplink_igot_url" />
+            </intent-filter>
+        </config-file>
+        
+        <source-file src="src/android/org/sunbird/SplashScreen.java" target-dir="src/org/sunbird/" />
+        <source-file src="src/android/org/sunbird/IntentUtil.java" target-dir="src/org/sunbird/" />
+        <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks" />
+        <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks" />
+        <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/util" />
+        <source-file src="src/android/org/sunbird/locales/Locale.java" target-dir="src/org/sunbird/locales" />
         <resource-file src="res/drawable/ic_combined_shape.xml" target="res/drawable/ic_combined_shape.xml"/>
 
     </platform>
