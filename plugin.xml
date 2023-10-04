@@ -16,7 +16,7 @@
     
     <!-- android -->
     <platform name="android">
-
+        <framework src="com.github.bumptech.glide:glide:3.7.0">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="splashscreen">
             <param name="android-package" value="org.sunbird.SplashScreen" />
